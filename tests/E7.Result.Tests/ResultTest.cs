@@ -51,8 +51,8 @@ public class ResultTests
     {
         var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
         var result = Result.Failure(error);
-
-        Assert.True(result.IsErrorType(ErrorType.ValidationRule));
+        
+       result.IsErrorType(ErrorType.ValidationRule).Should().BeTrue();
     }
 
     [Fact]
@@ -61,15 +61,14 @@ public class ResultTests
         var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
         var result = Result.Failure(error);
 
-        Assert.False(result.IsErrorType(ErrorType.ValidationRule));
+        result.IsErrorType(ErrorType.BusinessRule).Should().BeFalse();
     }
 
     [Fact]
     public void ToString_ShouldReturnSuccessStringForSuccessfulResult()
     {
         var result = Result.Success();
-
-        Assert.Equal("Success", result.ToString());
+        result.ToString().Should().Be("Success");
     }
 
     [Fact]
@@ -78,6 +77,6 @@ public class ResultTests
         var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
         var result = Result.Failure(error);
 
-        Assert.Equal($"Failure: {error}", result.ToString());
+        result.ToString().Should().Be($"Failure: {error}");
     }
 }
