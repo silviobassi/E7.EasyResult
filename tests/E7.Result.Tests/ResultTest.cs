@@ -41,9 +41,9 @@ public class ResultTests
         var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
         Result result = error;
 
-        Assert.False(result.IsSuccess);
-        Assert.True(result.IsFailure);
-        Assert.Equal(error, result.Error);
+        result.IsSuccess.Should().BeFalse();
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(error);
     }
 
     [Fact]
