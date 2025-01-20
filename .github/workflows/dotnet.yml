@@ -102,4 +102,4 @@ jobs:
           -o packages
 
       - name: Publish NuGet Package
-        run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.ORG_NUGET }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.NUGET_ORG }} --source https://api.nuget.org/v3/index.json
