@@ -1,0 +1,85 @@
+name: .NET CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Github Tag Bump
+        id: tag_bump
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INITIAL_VERSION: 1.0.0
+          DEFAULT_BUMP: patch
+
+    outputs:
+      new_version: ${{ steps.tag_bump.outputs.new_tag }}
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run tests
+        run: dotnet test --verbosity normal
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [ test ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build src/E7.Result --configuration Release --no-restore
+
+  package-and-publish-lib:
+    runs-on: ubuntu-latest
+    needs: [ build, generate-version ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Generate NuGet Package
+        run: |
+          dotnet pack src/E7.Result/ \
+          --configuration Release \
+          -p:PackageVersion=${{ needs.generate-version.outputs.new_version }} \
+          -p:RepositoryUrl=https://github.com/silviobassi/E7.Result \
+          -o packages
+
+      - name: Publish NuGet Package
+        run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://api.nuget.org/v3/index.json
