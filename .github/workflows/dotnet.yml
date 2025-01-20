@@ -101,7 +101,7 @@ jobs:
           args: >
             -Dsonar.organization=silviobassi
             -Dsonar.projectKey=silviobassi_E7.Result
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.dotnet.coverage.reportPaths=coverage.xml
 
     
   
