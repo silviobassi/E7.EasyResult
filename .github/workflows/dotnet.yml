@@ -62,7 +62,7 @@ jobs:
 
   generate-version:
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [ build, sonar-cloud-scan ]
     permissions:
       contents: write
 
@@ -82,7 +82,7 @@ jobs:
 
   package-and-publish-lib:
     runs-on: ubuntu-latest
-    needs: [ generate-version, sonar-cloud-scan ]
+    needs: [ generate-version]
 
     steps:
       - uses: actions/checkout@v4
