@@ -36,13 +36,13 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-      
+
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Run tests
         run: dotnet test -coverprofile=coverage.out --verbosity normal
-
+  
   
   build:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build src/E7.Result --configuration Release --no-restore
+        run: dotnet build src/E7.Result --configuration Release --no-restore verify sonar:sonar -Dsonar.projectKey=silviobassi_E7.Result -Dsonar.organization=silviobassi -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
 
   package-and-publish-lib:
     runs-on: ubuntu-latest
@@ -84,3 +84,6 @@ jobs:
 
       - name: Publish NuGet Package
         run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://api.nuget.org/v3/index.json
+
+    
+  
