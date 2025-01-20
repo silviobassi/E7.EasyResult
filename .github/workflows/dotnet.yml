@@ -41,7 +41,7 @@ jobs:
         run: dotnet restore
 
       - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --verbosity normal
 
   sonarqube:
     runs-on: ubuntu-latest
