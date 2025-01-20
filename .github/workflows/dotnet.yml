@@ -26,7 +26,7 @@ jobs:
   
   build:
     runs-on: ubuntu-latest
-    needs: [ test ]
+    needs: [ sonar-cloud-scan ]
 
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +43,7 @@ jobs:
         run: dotnet build src/E7.Result --configuration Release --no-restore
   
   sonar-cloud-scan:
-    needs: [ build ]
+    needs: [ test ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
