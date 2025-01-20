@@ -44,9 +44,7 @@ jobs:
         run: dotnet test --collect "Code Coverage" --verbosity normal
 
       - name: Install SonarCloud Scanner
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          sonar-token: ${{ secrets.SONAR_TOKEN }}
+        uses: SonarSource/sonarcloud-github-action@v4
 
       - name: Run SonarCloud Analysis
         run: |
