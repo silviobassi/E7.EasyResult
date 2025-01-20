@@ -62,9 +62,9 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin /k:"silviobassi_E7.Result" /d:sonar.login="${ secrets.SONAR_TOKEN }"
+          dotnet sonarscanner begin /k:"silviobassi_E7.Result" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           dotnet build
-          dotnet sonarscanner end /d:sonar.login="${ secrets.SONAR_TOKEN }"
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   build:
     runs-on: ubuntu-latest
