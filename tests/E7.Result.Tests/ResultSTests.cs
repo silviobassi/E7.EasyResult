@@ -4,12 +4,12 @@ using FluentAssertions;
 
 namespace E7.Result.Tests;
 
-public class ResultTests
+public class ResultSTests
 {
     [Fact]
     public void Success_ShouldCreateSuccessfulResult()
     {
-        var result = Result.Success();
+        var result = ResultS.Success();
 
         result.IsSuccess.Should().BeTrue();
         result.IsFailure.Should().BeFalse();
@@ -20,7 +20,7 @@ public class ResultTests
     public void Failure_ShouldCreateFailedResult()
     {
         var error = new NotFoundError();
-        var result = Result.Failure(error);
+        var result = ResultS.Failure(error);
 
         result.IsSuccess.Should().BeFalse();
         result.IsFailure.Should().BeTrue();
@@ -31,18 +31,18 @@ public class ResultTests
     public void ImplicitConversionFromError_ShouldCreateFailedResult()
     {
         var error = new NotFoundError();
-        Result result = error;
+        ResultS resultS = error;
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        resultS.IsSuccess.Should().BeFalse();
+        resultS.IsFailure.Should().BeTrue();
+        resultS.Error.Should().Be(error);
     }
 
     [Fact]
     public void IsErrorType_ShouldReturnTrueForMatchingErrorType()
     {
         var error = new NotFoundError();
-        var result = Result.Failure(error);
+        var result = ResultS.Failure(error);
 
         result.IsErrorType(ErrorType.NotFoundRule).Should().BeTrue();
     }
@@ -51,7 +51,7 @@ public class ResultTests
     public void IsErrorType_ShouldReturnFalseForNonMatchingErrorType()
     {
         var error = new NotFoundError();
-        var result = Result.Failure(error);
+        var result = ResultS.Failure(error);
 
         result.IsErrorType(ErrorType.BusinessRule).Should().BeFalse();
     }
@@ -59,7 +59,7 @@ public class ResultTests
     [Fact]
     public void ToString_ShouldReturnSuccessStringForSuccessfulResult()
     {
-        var result = Result.Success();
+        var result = ResultS.Success();
         result.ToString().Should().Be("Success");
     }
 
@@ -67,7 +67,7 @@ public class ResultTests
     public void ToString_ShouldReturnFailureStringForFailedResult()
     {
         var error = new NotFoundError();
-        var result = Result.Failure(error);
+        var result = ResultS.Failure(error);
 
         result.ToString().Should().Be($"Failure: {error}");
     }

@@ -1,7 +1,7 @@
 namespace E7.Result.Errors;
 
 /// <summary>
-/// /// Defines the types of errors that can occur in the application when the result pattern is applied.
+/// /// Defines the types of errors that can occur in the application when the resultS pattern is applied.
 /// </summary>
 public enum ErrorType
 {

@@ -18,6 +18,6 @@ public sealed class InvalidFieldsError(List<string?> errorsMessages)
     /// <summary>
     /// Gets the HTTP status code associated with the error.
     /// </summary>
-    /// <returns>The HTTP status code for invalid fields (400) <see cref="Result{T}"/>.</returns>
+    /// <returns>The HTTP status code for invalid fields (400) <see cref="ResultSS{T}"/>.</returns>
     public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.BadRequest;
 }

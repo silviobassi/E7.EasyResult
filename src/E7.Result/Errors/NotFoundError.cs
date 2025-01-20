@@ -17,6 +17,6 @@ public sealed class NotFoundError()
     /// <summary>
     /// Gets the HTTP status code associated with the error.
     /// </summary>
-    /// <returns>The HTTP status code for not found (404) <see cref="Result{T}"/>.</returns>
+    /// <returns>The HTTP status code for not found (404) <see cref="ResultSS{T}"/>.</returns>
     public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.NotFound;
 }
