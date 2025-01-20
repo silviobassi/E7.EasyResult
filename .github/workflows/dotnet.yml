@@ -8,7 +8,7 @@ on:
 
 jobs:
   generate-version:
-    runs-on: ubuntu-latest
+    runs-on: windows-lastet
     permissions:
       contents: write
 
@@ -27,7 +27,7 @@ jobs:
       new_version: ${{ steps.tag_bump.outputs.new_tag }}
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-lastet
 
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
         run: dotnet test --verbosity normal
 
   sonarqube:
-    runs-on: ubuntu-latest
+    runs-on: windows-lastet
     needs: test
 
     steps:
@@ -62,12 +62,12 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin /k:"silviobassi_E7.Result" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner begin /k:"silviobassi_E7.Result" /d:sonar.token="${{ secrets.SONAR_TOKEN }} /d:sonar.host.url="https://sonarcloud.io""
           dotnet build
-          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }} /d:sonar.host.url="https://sonarcloud.io""
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-lastet
     needs: [ test, sonarqube ]
 
     steps:
@@ -82,7 +82,7 @@ jobs:
         run: dotnet build src/E7.Result --configuration Release --no-restore
 
   package-and-publish-lib:
-    runs-on: ubuntu-latest
+    runs-on: windows-lastet
     needs: build
 
     steps:
