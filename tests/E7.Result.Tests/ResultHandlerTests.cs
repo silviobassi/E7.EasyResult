@@ -14,7 +14,7 @@ public class ResultHandlerTests
 
         var actionResult = result.Match(
             () => result,
-            appError => appError!
+            appError => appError
         );
 
         actionResult.Value.Should().Be(result.Value);
