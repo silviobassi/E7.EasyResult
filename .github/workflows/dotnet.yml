@@ -102,7 +102,7 @@ jobs:
             -Dsonar.projectKey=silviobassi_E7.Result
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.sources=lib/
-            -Dsonar.tests=tests/E7.Result.Tests
+            -Dsonar.tests=*
             -Dsonar.test.exclusions=tests/**
             -Dsonar.verbose=true
         env:
