@@ -40,18 +40,20 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Install dotCover
-        run: dotnet tool install --global JetBrains.dotCover.GlobalTool
-
       - name: Run tests
         run: dotnet test --collect "Code Coverage" --verbosity normal
-        
-      - name: Generate Coverage Report
-        run: |
-          dotnet build /p:CollectCoverage=true /p:CoverletOutput=coverage/ --configuration Release
-          # Optional: If you use coverlet, you may need to specify the location of the coverage reports
-          # sonar.coverageReportPaths=coverage/*.xml
 
+      - name: Install SonarCloud Scanner
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Run SonarCloud Analysis
+        run: |
+            dotnet sonarscanner begin /k:"silviobassi_E7.Result" /o:"silviobassi" /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.coverageReportPaths="**/coverage*.xml"
+            dotnet build
+            dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
+  
   build:
     runs-on: ubuntu-latest
     needs: [ test ]
