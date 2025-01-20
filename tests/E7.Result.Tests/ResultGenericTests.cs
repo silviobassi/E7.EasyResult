@@ -11,7 +11,7 @@ public class ResultGenericTests
     {
         const string value = "SuccessValue";
 
-        var result = ResultS<string>.Success(value);
+        var result = Result<string>.Success(value);
 
         result.IsSuccess.Should().BeTrue();
         result.IsFailure.Should().BeFalse();
@@ -24,7 +24,7 @@ public class ResultGenericTests
     {
         var error = new NotFoundError();
 
-        var result = ResultS<string>.Failure(error);
+        var result = Result<string>.Failure(error);
 
         result.IsSuccess.Should().BeFalse();
         result.IsFailure.Should().BeTrue();
@@ -37,12 +37,12 @@ public class ResultGenericTests
     {
         const string value = "SuccessValue";
 
-        ResultS<string> resultS = value;
+        Result<string> result = value;
 
-        resultS.IsSuccess.Should().BeTrue();
-        resultS.IsFailure.Should().BeFalse();
-        resultS.Value.Should().Be(value);
-        resultS.Error.Should().BeNull();
+        result.IsSuccess.Should().BeTrue();
+        result.IsFailure.Should().BeFalse();
+        result.Value.Should().Be(value);
+        result.Error.Should().BeNull();
     }
 
     [Fact]
@@ -50,12 +50,12 @@ public class ResultGenericTests
     {
         var error = new NotFoundError();
 
-        ResultS<string> resultS = error!;
+        Result<string> result = error!;
 
-        resultS.IsSuccess.Should().BeFalse();
-        resultS.IsFailure.Should().BeTrue();
-        resultS.Value.Should().BeNull();
-        resultS.Error.Should().Be(error);
+        result.IsSuccess.Should().BeFalse();
+        result.IsFailure.Should().BeTrue();
+        result.Value.Should().BeNull();
+        result.Error.Should().Be(error);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class ResultGenericTests
     {
         const string value = "SuccessValue";
 
-        var result = ResultS<string>.Success(value);
+        var result = Result<string>.Success(value);
 
         result.ToString().Should().Be($"Success: {value}");
     }
@@ -73,7 +73,7 @@ public class ResultGenericTests
     {
         var error = new NotFoundError();
 
-        var result = ResultS<string>.Failure(error);
+        var result = Result<string>.Failure(error);
 
         result.ToString().Should().Be($"Failure: {error}");
     }
