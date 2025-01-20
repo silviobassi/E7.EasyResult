@@ -7,25 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  generate-version:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Github Tag Bump
-        id: tag_bump
-        uses: anothrNick/github-tag-action@1.71.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: patch
-
-    outputs:
-      new_version: ${{ steps.tag_bump.outputs.new_tag }}
-
   test:
     runs-on: ubuntu-latest
 
@@ -42,7 +23,6 @@ jobs:
 
       - name: Run tests
         run: dotnet test --verbosity normal
-  
   
   build:
     runs-on: ubuntu-latest
@@ -61,6 +41,43 @@ jobs:
 
       - name: Build
         run: dotnet build src/E7.Result --configuration Release --no-restore
+        
+  sonar-cloud-scan:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=silviobassi
+            -Dsonar.projectKey=silviobassi_E7.Result
+            -Dsonar.dotnet.coverage.reportPaths=coverage.xml
+
+  generate-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Github Tag Bump
+        id: tag_bump
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INITIAL_VERSION: 1.0.0
+          DEFAULT_BUMP: patch
+
+    outputs:
+      new_version: ${{ steps.tag_bump.outputs.new_tag }}
 
   package-and-publish-lib:
     runs-on: ubuntu-latest
@@ -84,24 +101,3 @@ jobs:
 
       - name: Publish NuGet Package
         run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://api.nuget.org/v3/index.json
-    
-  sonar-cloud-scan:
-    needs: [ test ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=silviobassi
-            -Dsonar.projectKey=silviobassi_E7.Result
-            -Dsonar.dotnet.coverage.reportPaths=coverage.xml
-
-    
-  
