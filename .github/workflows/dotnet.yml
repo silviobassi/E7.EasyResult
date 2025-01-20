@@ -41,7 +41,6 @@ jobs:
             -Dsonar.organization=silviobassi
             -Dsonar.projectKey=silviobassi_E7.Result
             -Dsonar.dotnet.coverage.reportPaths=coverage.xml
-            -Dsonar.sources=/
             -Dsonar.tests=/
             -Dsonar.verbose=true
   
