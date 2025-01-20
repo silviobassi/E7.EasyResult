@@ -38,7 +38,7 @@ jobs:
         with:
           projectBaseDir: src/E7.Result
           args: >
-            -Dsonar.projectKey=E7.Result
+            -Dsonar.projectKey=silviobassi_E7.Result
             -Dsonar.organization=silviobassi
   
   build:
