@@ -34,6 +34,6 @@ public abstract class AppError(string detail, ErrorType errorType, string errorC
     /// <summary>
     /// Gets the HTTP status code associated with the error.
     /// </summary>
-    /// <returns>The HTTP status code.</returns>
+    /// <returns>The HTTP status code <see cref="HttpStatusCode"/>.</returns>
     public abstract HttpStatusCode GetHttpStatusCode();
 }
