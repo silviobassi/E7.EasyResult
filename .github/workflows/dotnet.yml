@@ -38,8 +38,8 @@ jobs:
         with:
           projectBaseDir: src/E7.Result
           args: >
-            -sonar.projectKey=E7.Result
-            -sonar.organization=silviobassi
+            -Dsonar.projectKey=E7.Result
+            -Dsonar.organization=silviobassi
   
   build:
     runs-on: ubuntu-latest
