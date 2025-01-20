@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         run: dotnet test --verbosity normal
   
-  sonar-cloud-scan:
+  sonarqube-scan:
     needs: [ test ]
     runs-on: ubuntu-latest
     steps:
@@ -32,15 +32,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
-            -Dsonar.organization=silviobassi
-            -Dsonar.projectKey=silviobassi_E7.Result
-            -Dsonar.dotnet.coverage.reportPaths=coverage.xml
+          projectBaseDir: src/E7.Result
   
   build:
     runs-on: ubuntu-latest
