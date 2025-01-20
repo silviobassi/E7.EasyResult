@@ -40,8 +40,17 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
+      - name: Install dotCover
+        run: dotnet tool install --global JetBrains.dotCover.GlobalTool
+
       - name: Run tests
         run: dotnet test --collect "Code Coverage" --verbosity normal
+        
+      - name: Generate Coverage Report
+        run: |
+          dotnet build /p:CollectCoverage=true /p:CoverletOutput=coverage/ --configuration Release
+          # Optional: If you use coverlet, you may need to specify the location of the coverage reports
+          # sonar.coverageReportPaths=coverage/*.xml
 
   build:
     runs-on: ubuntu-latest
