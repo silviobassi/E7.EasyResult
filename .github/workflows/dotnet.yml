@@ -85,7 +85,8 @@ jobs:
       - name: Publish NuGet Package
         run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://api.nuget.org/v3/index.json
     
-  DemoSonarCloudSCan:
+  sonar-cloud-scan:
+    needs: [ test ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
