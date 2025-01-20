@@ -55,6 +55,9 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Build
         run: dotnet build src/E7.Result --configuration Release --no-restore
 
