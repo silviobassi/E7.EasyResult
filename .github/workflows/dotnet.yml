@@ -84,6 +84,30 @@ jobs:
 
       - name: Publish NuGet Package
         run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://api.nuget.org/v3/index.json
+    
+   
+    sonarqube:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            # Disabling shallow clones is recommended for improving the relevancy of reporting
+            fetch-depth: 0
+          
+        - name: SonarQube Scan
+          uses: sonarsource/sonarcloud-github-action@v4 # Ex: v4.0.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
+          with:
+            projectBaseDir: src
+            args: >
+              -Dsonar.organization=silviobassi
+              -Dsonar.projectKey=my-silviobassi_E7.Result
+              -Dsonar.python.coverage.reportPaths=coverage.xml
+              -Dsonar.sources=lib/
+              -Dsonar.tests=tests/
+              -Dsonar.test.exclusions=tests/**
+              -Dsonar.verbose=true
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     
   
