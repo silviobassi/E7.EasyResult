@@ -64,7 +64,7 @@ jobs:
         run: |
           dotnet sonarscanner begin /k:"silviobassi_E7.Result" /d:sonar.token="${{ secrets.SONAR_TOKEN }} /d:sonar.host.url="https://sonarcloud.io""
           dotnet build
-          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }} /d:sonar.host.url="https://sonarcloud.io""
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }} /d:sonar.host.url="https://sonarcloud.io"
 
   build:
     runs-on: ubuntu-latest
