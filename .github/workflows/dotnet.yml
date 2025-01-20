@@ -37,6 +37,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: src/E7.Result
+          args: >
+            -sonar.projectKey=E7.Result
+            -sonar.organization=silviobassi
   
   build:
     runs-on: ubuntu-latest
