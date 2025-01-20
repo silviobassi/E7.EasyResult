@@ -16,6 +16,9 @@ public class AppErrorTests
         result.Should().NotBeNull();
         result.Should().HaveCount(1);
         result.Should().Contain("Object not found.");
+        error.GetHttpStatusCode().Should().Be(HttpStatusCode.NotFound);
+        error.ErrorType.Should().Be(ErrorType.NotFoundRule);
+        error.ErrorCodeName.Should().Be(nameof(NotFoundError));
     }
 
     [Fact]
@@ -30,5 +33,6 @@ public class AppErrorTests
         error.GetErrorsMessage().Should().Contain("Password required");
         error.GetHttpStatusCode().Should().Be(HttpStatusCode.BadRequest);
         error.ErrorType.Should().Be(ErrorType.ValidationRule);
+        error.ErrorCodeName.Should().Be(nameof(InvalidFieldsError));
     }
 }
