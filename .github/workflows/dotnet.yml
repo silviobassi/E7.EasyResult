@@ -41,7 +41,7 @@ jobs:
         run: dotnet restore
 
       - name: Run tests
-        run: dotnet test -coverprofile=coverage.out --verbosity normal
+        run: dotnet test --verbosity normal
   
   
   build:
