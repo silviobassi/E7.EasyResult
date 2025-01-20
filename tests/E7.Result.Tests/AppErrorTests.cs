@@ -1,0 +1,34 @@
+﻿using System.Net;
+using E7.Result.Errors;
+using FluentAssertions;
+
+namespace E7.Result.Tests;
+
+public class AppErrorTests
+{
+    [Fact]
+    public void GetErrorsMessage_ShouldReturnErrorMessage()
+    {
+        var error = new NotFoundError();
+
+        var result = error.GetErrorsMessage();
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(1);
+        result.Should().Contain("Object not found.");
+    }
+
+    [Fact]
+    public void GetErrorsMessage_ShouldReturnListOfErrorMessages()
+    {
+        var error = new InvalidFieldsError(["Name required", "Email required", "Password required"]);
+
+        error.Should().NotBeNull();
+        error.GetErrorsMessage().Should().HaveCount(3);
+        error.GetErrorsMessage().Should().Contain("Name required");
+        error.GetErrorsMessage().Should().Contain("Email required");
+        error.GetErrorsMessage().Should().Contain("Password required");
+        error.GetHttpStatusCode().Should().Be(HttpStatusCode.BadRequest);
+        error.ErrorType.Should().Be(ErrorType.ValidationRule);
+    }
+}

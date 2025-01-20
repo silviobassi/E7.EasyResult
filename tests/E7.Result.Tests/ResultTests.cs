@@ -1,11 +1,11 @@
 ﻿using E7.Result.Errors;
+using E7.Result.Tests.Responses;
 using FluentAssertions;
 
 namespace E7.Result.Tests;
 
 public class ResultTests
 {
-
     [Fact]
     public void Success_ShouldCreateSuccessfulResult()
     {
@@ -19,7 +19,7 @@ public class ResultTests
     [Fact]
     public void Failure_ShouldCreateFailedResult()
     {
-        var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
+        var error = new NotFoundError();
         var result = Result.Failure(error);
 
         result.IsSuccess.Should().BeFalse();
@@ -30,7 +30,7 @@ public class ResultTests
     [Fact]
     public void ImplicitConversionFromError_ShouldCreateFailedResult()
     {
-        var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
+        var error = new NotFoundError();
         Result result = error;
 
         result.IsSuccess.Should().BeFalse();
@@ -41,16 +41,16 @@ public class ResultTests
     [Fact]
     public void IsErrorType_ShouldReturnTrueForMatchingErrorType()
     {
-        var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
+        var error = new NotFoundError();
         var result = Result.Failure(error);
-        
-       result.IsErrorType(ErrorType.ValidationRule).Should().BeTrue();
+
+        result.IsErrorType(ErrorType.NotFoundRule).Should().BeTrue();
     }
 
     [Fact]
     public void IsErrorType_ShouldReturnFalseForNonMatchingErrorType()
     {
-        var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
+        var error = new NotFoundError();
         var result = Result.Failure(error);
 
         result.IsErrorType(ErrorType.BusinessRule).Should().BeFalse();
@@ -66,7 +66,7 @@ public class ResultTests
     [Fact]
     public void ToString_ShouldReturnFailureStringForFailedResult()
     {
-        var error = new TestAppError("Detail", ErrorType.ValidationRule, "ErrorCode");
+        var error = new NotFoundError();
         var result = Result.Failure(error);
 
         result.ToString().Should().Be($"Failure: {error}");
