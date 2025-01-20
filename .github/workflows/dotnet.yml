@@ -58,7 +58,7 @@ jobs:
 
   generate-version:
     runs-on: ubuntu-latest
-    needs: [ build, sonar-cloud-scan ]
+    needs: [ build, sonarqube-scan ]
     permissions:
       contents: write
 
