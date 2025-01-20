@@ -7,5 +7,5 @@ public sealed class NotFoundError()
 {
     public override List<string?> GetErrorsMessage() => [Detail];
 
-    public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.BadRequest;
+    public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.NotFound;
 }
