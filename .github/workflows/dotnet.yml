@@ -60,7 +60,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build src/E7.Result --configuration Release --no-restore verify sonar:sonar -Dsonar.projectKey=silviobassi_E7.Result -Dsonar.organization=silviobassi -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        run: dotnet build src/E7.Result --configuration Release --no-restore
 
   package-and-publish-lib:
     runs-on: ubuntu-latest
