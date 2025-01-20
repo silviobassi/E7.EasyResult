@@ -1,4 +1,4 @@
-name: .NET CI/CD
+name: E7.Result .NET CI/CD
 
 on:
   push:
@@ -41,7 +41,7 @@ jobs:
         run: dotnet restore
 
       - name: Run tests
-        run: dotnet test --collect "Code Coverage" --verbosity normal
+        run: dotnet test -coverprofile=coverage.out --verbosity normal
 
   
   build:
