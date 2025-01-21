@@ -58,7 +58,7 @@ jobs:
 
       - name: Generate NuGet Package
         run: |
-          dotnet pack E7.Result/ \
+          dotnet pack src/E7.Result/ \
           --configuration Release \
           -p:PackageVersion=${{ needs.generate-version.outputs.new_version }} \
           -p:RepositoryUrl=https://github.com/silviobassi/E7.Result \
