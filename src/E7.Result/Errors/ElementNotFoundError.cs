@@ -5,8 +5,8 @@ namespace E7.Result.Errors;
 /// <summary>
 /// Represents an error that occurs when an object is not found.
 /// </summary>
-public sealed class NotFoundError()
-    : AppError("Object not found.", ErrorType.NotFoundRule, nameof(NotFoundError))
+public sealed class ElementNotFoundError()
+    : AppError("Object not found.", ErrorType.NotFoundRule, nameof(ElementNotFoundError))
 {
     /// <summary>
     /// Gets the list of error messages.
