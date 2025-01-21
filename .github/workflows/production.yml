@@ -56,12 +56,6 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
-      - name: Copy README.md
-        run: cp README.md src/E7.Result/
-
-      - name: List Files in src/E7.Result
-        run: ls -la src/E7.Result/
-
       - name: Generate NuGet Package
         run: |
           dotnet pack src/E7.Result/ \
