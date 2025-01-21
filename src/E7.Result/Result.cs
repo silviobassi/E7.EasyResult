@@ -92,12 +92,14 @@ public class Result<T> : Result
     /// <returns>A <see cref="Result{T}"/> instance representing success.</returns>
     public static Result<T> Success(T value) => new(value, true, null);
 
+
     /// <summary>
-    /// Creates a failed result.
+    /// Creates a failed result with an error.
     /// </summary>
+    /// <typeparam name="TError">The type of the error.</typeparam>
     /// <param name="error">The error associated with the failure.</param>
     /// <returns>A <see cref="Result{T}"/> instance representing failure.</returns>
-    public new static Result<T?> Failure(AppError? error) => new(default, false, error);
+    public static Result<T?> Failure<TError>(TError error) where TError : AppError => new(default, false, error);
 
     /// <summary>
     /// Implicitly converts a value of type <typeparamref name="T"/> to a successful <see cref="Result{T}"/>.

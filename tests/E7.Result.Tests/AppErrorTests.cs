@@ -9,7 +9,7 @@ public class AppErrorTests
     [Fact]
     public void GetErrorsMessage_ShouldReturnErrorMessage()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
 
         var result = error.GetErrorsMessage();
 
@@ -18,7 +18,7 @@ public class AppErrorTests
         result.Should().Contain("Object not found.");
         error.GetHttpStatusCode().Should().Be(HttpStatusCode.NotFound);
         error.ErrorType.Should().Be(ErrorType.NotFoundRule);
-        error.ErrorCodeName.Should().Be(nameof(NotFoundError));
+        error.ErrorCodeName.Should().Be(nameof(ElementNotFoundError));
     }
 
     [Fact]

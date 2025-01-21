@@ -22,7 +22,7 @@ public class ResultGenericTests
     [Fact]
     public void Failure_ShouldCreateFailedResultWithError()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
 
         var result = Result<string>.Failure(error);
 
@@ -48,7 +48,7 @@ public class ResultGenericTests
     [Fact]
     public void ImplicitConversionFromError_ShouldCreateFailedResult()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
 
         Result<string> result = error!;
 
@@ -71,7 +71,7 @@ public class ResultGenericTests
     [Fact]
     public void ToString_ShouldReturnFailureStringWithError()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
 
         var result = Result<string>.Failure(error);
 

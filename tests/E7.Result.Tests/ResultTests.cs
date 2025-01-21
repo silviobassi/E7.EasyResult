@@ -19,7 +19,7 @@ public class ResultTests
     [Fact]
     public void Failure_ShouldCreateFailedResult()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
         result.IsSuccess.Should().BeFalse();
@@ -30,7 +30,7 @@ public class ResultTests
     [Fact]
     public void ImplicitConversionFromError_ShouldCreateFailedResult()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
         Result result = error;
 
         result.IsSuccess.Should().BeFalse();
@@ -41,7 +41,7 @@ public class ResultTests
     [Fact]
     public void IsErrorType_ShouldReturnTrueForMatchingErrorType()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
         result.IsErrorType(ErrorType.NotFoundRule).Should().BeTrue();
@@ -50,7 +50,7 @@ public class ResultTests
     [Fact]
     public void IsErrorType_ShouldReturnFalseForNonMatchingErrorType()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
         result.IsErrorType(ErrorType.BusinessRule).Should().BeFalse();
@@ -66,7 +66,7 @@ public class ResultTests
     [Fact]
     public void ToString_ShouldReturnFailureStringForFailedResult()
     {
-        var error = new NotFoundError();
+        var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
         result.ToString().Should().Be($"Failure: {error}");
