@@ -5,7 +5,15 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Authors>Silvio Luiz Bassi</Authors>
+        <Company>Enfatiza7 Consultoria em Tecnologia LTDA</Company>
+        <Description>Result pattern implementation</Description>
+        <PackageReadmeFile>..\README.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        
     </PropertyGroup>
     
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
 </Project>
