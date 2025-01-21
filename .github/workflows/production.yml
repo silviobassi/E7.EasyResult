@@ -52,6 +52,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
+      
+      - name: Copy Readme.md
+        run: cp README.md src/E7.Result/
 
       - name: Generate NuGet Package
         run: |
