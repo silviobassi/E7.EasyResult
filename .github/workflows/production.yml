@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
+      
+      - name: Install dependencies
+        run: dotnet restore
     
       - name: Run Tests
         run: dotnet test --configuration Release
@@ -58,7 +61,6 @@ jobs:
 
       - name: Generate NuGet Package
         run: |
-          dotnet restore \
           dotnet pack src/E7.Result/ \
           --configuration Release \
           -p:PackageVersion=${{ needs.generate-version.outputs.new_version }} \
