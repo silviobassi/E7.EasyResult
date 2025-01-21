@@ -1,68 +1,65 @@
-name: Publishing Package | Main
+name: Build and Analyze | Develop
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - develop
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 9.x
 
-      - name: Install dependencies
-        run: dotnet restore
-
-      - name: Test
-        run: dotnet test --configuration Release
-  
-  generate-version:
-    runs-on: ubuntu-latest
-    needs: test
-    permissions:
-      contents: write # to be able to publish a GitHub release
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Github Tag Bump
-        id: tab_bump
-        uses: anothrNick/github-tag-action@1.71.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: patch
-    
-    outputs:
-      new_version: ${{ steps.tab_bump.outputs.new_tag }}
-  
-  package-and-publish-lib:
-    runs-on: ubuntu-latest
-    needs: generate-version
-    
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
-
-      - name: Generate NuGet Package
+      - name: Install dotnet tools
         run: |
-          dotnet pack src/E7.Result/ \
-          --configuration Release \
-          -p:PackageVersion=${{ needs.generate-version.outputs.new_version }} \
-          -p:RepositoryUrl=https://github.com/silviobassi/E7.Result \
-          -o packages
+          dotnet tool install --global dotnet-coverage
 
-      - name: Publish NuGet Package
-        run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://api.nuget.org/v3/index.json
+      - name: Run Tests and Collect Coverage
+        run: dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+  code-analysis:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.x
+
+      - name: Install dotnet tools
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+
+      - name: Download Coverage Report
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-report
+
+      - name: Begin SonarCloud Scan
+        run: |
+          dotnet sonarscanner begin /k:"silviobassi_E7.Result" \
+            /o:"silviobassi" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
+
+      - name: Build
+        run: dotnet build --no-incremental
+
+      - name: End SonarCloud Scan
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
