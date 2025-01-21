@@ -58,7 +58,7 @@ jobs:
 
       - name: Generate NuGet Package
         run: |
-          dotnet restore src/E7.Result \
+          dotnet restore \
           dotnet pack src/E7.Result/ \
           --configuration Release \
           -p:PackageVersion=${{ needs.generate-version.outputs.new_version }} \
