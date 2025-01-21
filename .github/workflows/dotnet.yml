@@ -1,4 +1,4 @@
-name: Publishing Package | Develop
+name: Publishing Package | Main
 
 on:
   push:
