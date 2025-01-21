@@ -58,5 +58,8 @@ jobs:
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
 
+      - name: Build
+        run: dotnet build --no-incremental
+        
       - name: End SonarCloud Scan
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
