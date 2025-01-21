@@ -22,21 +22,14 @@ jobs:
         run: dotnet restore
 
       - name: Run tests
-        run: dotnet test --verbosity normal
-  
-  sonarqube-scan:
-    needs: [ test, build ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        run: dotnet test --blame --no-restore --verbosity normal \
+          /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=opencover.xml
+      
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: src/E7.Result
           args: >
             -Dsonar.projectKey=silviobassi_E7.Result
             -Dsonar.organization=silviobassi
@@ -61,7 +54,7 @@ jobs:
 
   generate-version:
     runs-on: ubuntu-latest
-    needs: [ build, sonarqube-scan ]
+    needs: [ build ]
     permissions:
       contents: write
 
