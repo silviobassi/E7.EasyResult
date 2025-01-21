@@ -22,8 +22,7 @@ jobs:
         run: dotnet restore
 
       - name: Run tests
-        run: dotnet test tests --blame --no-restore --verbosity normal \
-          /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=opencover.xml
+        run: dotnet test tests --no-restore --verbosity normal
       
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4
