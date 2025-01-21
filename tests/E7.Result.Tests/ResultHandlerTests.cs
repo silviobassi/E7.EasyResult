@@ -16,7 +16,7 @@ public class ResultHandlerTests
             () => result,
             appError => appError
         );
-
+        
         actionResult.Value.Should().Be(result.Value);
         actionResult.Error.Should().BeNull();
     }
