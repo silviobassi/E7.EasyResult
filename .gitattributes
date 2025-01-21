@@ -1,0 +1,2 @@
+﻿// Preserve the changes in the .github/workflows/dotnet.yml file
+.github/workflows/production.yml merge=ours
