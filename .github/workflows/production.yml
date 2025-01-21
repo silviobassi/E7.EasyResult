@@ -9,18 +9,18 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-  
+    
     steps:
       - uses: actions/checkout@v4
-  
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-      
+
       - name: Install dependencies
         run: dotnet restore
-    
+
       - name: Run Tests
         run: dotnet test --configuration Release
   
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     permissions:
-      contents: write # to be able to publish a GitHub release
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -55,9 +55,12 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-      
-      - name: Copy Readme.md
+
+      - name: Copy README.md
         run: cp README.md src/E7.Result/
+
+      - name: List Files in src/E7.Result
+        run: ls -la src/E7.Result/
 
       - name: Generate NuGet Package
         run: |
