@@ -1,8 +1,8 @@
-﻿using E7.Result.Errors;
-using E7.Result.Tests.Responses;
+﻿using E7.EasyResult.Errors;
+using E7.EasyResult.Tests.Responses;
 using FluentAssertions;
 
-namespace E7.Result.Tests;
+namespace E7.EasyResult.Tests;
 
 public class ResultGenericTests
 {

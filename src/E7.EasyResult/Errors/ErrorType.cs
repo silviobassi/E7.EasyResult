@@ -1,4 +1,4 @@
-namespace E7.Result.Errors;
+namespace E7.EasyResult.Errors;
 
 /// <summary>
 /// /// Defines the types of errors that can occur in the application when the result pattern is applied.

@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E7.Result", "src\E7.Result\E7.Result.csproj", "{BEB8D5F1-34F8-4B44-BDCE-B94B67213731}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E7.EasyResult", "src\E7.EasyResult\E7.EasyResult.csproj", "{BEB8D5F1-34F8-4B44-BDCE-B94B67213731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E7.Result.Tests", "tests\E7.Result.Tests\E7.Result.Tests.csproj", "{3B818B49-4850-4EC2-913D-E83B757C3962}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E7.EasyResult.Tests", "tests\E7.EasyResult.Tests\E7.EasyResult.Tests.csproj", "{3B818B49-4850-4EC2-913D-E83B757C3962}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7282A949-4075-4094-B3C9-16805376A180}"
 EndProject

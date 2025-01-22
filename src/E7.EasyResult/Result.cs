@@ -1,6 +1,6 @@
-﻿using E7.Result.Errors;
+﻿using E7.EasyResult.Errors;
 
-namespace E7.Result;
+namespace E7.EasyResult;
 
 /// <summary>
 /// Represents the result of an operation, indicating success or failure.

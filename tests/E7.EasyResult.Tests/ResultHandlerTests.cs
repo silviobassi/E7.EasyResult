@@ -1,9 +1,9 @@
-﻿using E7.Result.Errors;
-using E7.Result.Tests.Responses;
+﻿using E7.EasyResult.Errors;
+using E7.EasyResult.Tests.Responses;
 using FluentAssertions;
-using static E7.Result.Tests.Services.ResultSimulatorService;
+using static E7.EasyResult.Tests.Services.ResultSimulatorService;
 
-namespace E7.Result.Tests;
+namespace E7.EasyResult.Tests;
 
 public class ResultHandlerTests
 {

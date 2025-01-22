@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace E7.Result.Errors;
+namespace E7.EasyResult.Errors;
 
 /// <summary>
 /// Represents an error that occurs when fields are invalid.

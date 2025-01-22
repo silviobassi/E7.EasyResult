@@ -1,6 +1,6 @@
-﻿using E7.Result.Errors;
+﻿using E7.EasyResult.Errors;
 
-namespace E7.Result;
+namespace E7.EasyResult;
 
 /// <summary>
 /// Handles matching logic for results, allowing separation of concerns.

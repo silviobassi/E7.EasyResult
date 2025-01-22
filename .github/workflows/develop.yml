@@ -53,7 +53,7 @@ jobs:
 
       - name: Begin SonarCloud Scan
         run: |
-          dotnet sonarscanner begin /k:"silviobassi_E7.Result" \
+          dotnet sonarscanner begin /k:"silviobassi_E7.EasyResult" \
             /o:"silviobassi" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
