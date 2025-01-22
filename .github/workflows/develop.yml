@@ -62,7 +62,7 @@ jobs:
             /d:sonar.scanner.scanAll=false \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
-            /d:sonar.inclusions="**/*.cs" \
+            /d:sonar.inclusions="src/E7.EasyResult/**,tests/E7.EasyResult.Tests/**" \
 
       - name: Build
         run: dotnet build --no-incremental
