@@ -59,6 +59,14 @@ jobs:
       - name: Copy README.md
         run: cp README.md src/E7.Result/
 
+      - name: Verify README.md Encoding
+        run: |
+          file -i src/E7.Result/README.md
+          if [ "$(file -i src/E7.Result/README.md | grep -o 'charset=utf-8')" != "charset=utf-8" ]; then
+            echo "README.md is not UTF-8 encoded"
+            exit 1
+          fi
+
       - name: List Files in src/E7.Result
         run: ls -la src/E7.Result/
 
