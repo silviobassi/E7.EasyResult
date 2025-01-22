@@ -1,2 +1,2 @@
-﻿// Preserve the production.yml file in the .github/workflows directory
-.github/workflows/production.yml merge=ours
+﻿// Preserve the develop.yml file in the .github/workflows directory
+.github/workflows/develop.yml merge=ours
