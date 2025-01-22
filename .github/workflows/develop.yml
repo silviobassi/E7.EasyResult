@@ -55,6 +55,8 @@ jobs:
         run: |
           dotnet sonarscanner begin /k:"silviobassi_E7.EasyResult" \
             /o:"silviobassi" \
+            /d:sonar.sources=. \
+            /d:sonar.scanner.scanAll=false
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
 
