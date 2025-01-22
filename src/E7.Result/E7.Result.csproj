@@ -8,7 +8,6 @@
         <Company>Enfatiza7 Consultoria em Tecnologia LTDA</Company>
         <Description>Result pattern implementation</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageTags>Result pattern;.NET;error handling;C#;library;NuGet</PackageTags>
     </PropertyGroup>
