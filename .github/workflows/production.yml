@@ -56,9 +56,12 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
+      - name: Copy LICENSE
+        run: cp LICENSE src/E7.Result/
+        
       - name: Copy README.md
         run: cp README.md src/E7.Result/
-
+      
       - name: Verify README.md Encoding
         run: |
           file -i src/E7.Result/README.md
