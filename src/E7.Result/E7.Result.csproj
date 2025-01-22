@@ -7,13 +7,14 @@
         <Authors>Silvio Luiz Bassi</Authors>
         <Company>Enfatiza7 Consultoria em Tecnologia LTDA</Company>
         <Description>Result pattern implementation</Description>
-        <PackageReadmeFile>..\README.md</PackageReadmeFile>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageTags>Result pattern;.NET;error handling;C#;library;NuGet</PackageTags>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+        <None Include="LICENSE" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
 </Project>
