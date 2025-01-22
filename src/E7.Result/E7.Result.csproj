@@ -9,7 +9,7 @@
         <Description>Result pattern implementation</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        
+        <PackageTags>Result pattern;.NET;error handling;C#;library;NuGet</PackageTags>
     </PropertyGroup>
     
     <ItemGroup>
