@@ -63,8 +63,8 @@ jobs:
         run: |
           file -i src/E7.Result/README.md
           if [ "$(file -i src/E7.Result/README.md | grep -o 'charset=utf-8')" != "charset=utf-8" ]; then
-            echo "README.md is not UTF-8 encoded"
-            exit 1
+            echo "Converting README.md to UTF-8"
+            iconv -f utf-16le -t utf-8 src/E7.Result/README.md -o src/E7.Result/README.md
           fi
 
       - name: List Files in src/E7.Result
