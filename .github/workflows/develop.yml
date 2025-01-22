@@ -10,7 +10,7 @@ on:
       - 'LICENSE'
       - '.gitignore'
       - '.github/**'
-
+      - '.github/workflows/**'
 jobs:
   test:
     runs-on: ubuntu-latest
