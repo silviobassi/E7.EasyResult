@@ -9,8 +9,7 @@ on:
       - 'README.md'
       - 'LICENSE'
       - '.gitignore'
-      - '.github/workflows/**'
-      - '.gitattributes'
+      - '.github/workflows/production.yml'
   workflow_dispatch:
 
 jobs:
