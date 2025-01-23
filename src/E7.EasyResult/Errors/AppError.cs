@@ -8,6 +8,8 @@ namespace E7.EasyResult.Errors;
 /// <param name="detail">The detail message of the error.</param>
 /// <param name="errorType">The type of the error.</param>
 /// <param name="errorCodeName">The name of the error code.</param>
+/// <author>Silvio Luiz Bassi</author>
+/// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
 public abstract class AppError(string detail, ErrorType errorType, string errorCodeName)
 {
     /// <summary>
@@ -29,7 +31,7 @@ public abstract class AppError(string detail, ErrorType errorType, string errorC
     /// Gets the list of error messages.
     /// </summary>
     /// <returns>A list of error messages.</returns>
-    public abstract List<string?> GetErrorsMessage();
+    public abstract List<object> GetErrorsMessage();
 
     /// <summary>
     /// Gets the HTTP status code associated with the error.
