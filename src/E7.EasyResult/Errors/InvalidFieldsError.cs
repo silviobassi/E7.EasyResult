@@ -6,14 +6,16 @@ namespace E7.EasyResult.Errors;
 /// Represents an error that occurs when fields are invalid.
 /// </summary>
 /// <param name="errorsMessages">The list of error messages.</param>
-public sealed class InvalidFieldsError(List<string?> errorsMessages)
+/// <author>Silvio Luiz Bassi</author>
+/// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
+public sealed class InvalidFieldsError(List<object> errorsMessages)
     : AppError("Invalid Fields.", ErrorType.ValidationRule, nameof(InvalidFieldsError))
 {
     /// <summary>
     /// Gets the list of error messages.
     /// </summary>
     /// <returns>A list of error messages.</returns>
-    public override List<string?> GetErrorsMessage() => errorsMessages;
+    public override List<object> GetErrorsMessage() => errorsMessages;
 
     /// <summary>
     /// Gets the HTTP status code associated with the error.

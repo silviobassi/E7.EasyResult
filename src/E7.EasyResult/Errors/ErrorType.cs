@@ -1,8 +1,10 @@
 namespace E7.EasyResult.Errors;
 
 /// <summary>
-/// /// Defines the types of errors that can occur in the application when the result pattern is applied.
+/// Defines the types of errors that can occur in the application when the result pattern is applied.
 /// </summary>
+/// <author>Silvio Luiz Bassi</author>
+/// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
 public enum ErrorType
 {
     /// <summary>
