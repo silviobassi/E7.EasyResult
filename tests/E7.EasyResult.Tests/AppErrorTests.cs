@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using E7.EasyResult.Errors;
 using FluentAssertions;
+using ServicoProcessamento.Communication.E7.EasyResult.Errors;
 
 namespace E7.EasyResult.Tests;
 

@@ -1,6 +1,7 @@
-﻿using E7.EasyResult.Errors;
-using E7.EasyResult.Tests.Responses;
+﻿using E7.EasyResult.Tests.Responses;
 using FluentAssertions;
+using ServicoProcessamento.Communication.E7.EasyResult;
+using ServicoProcessamento.Communication.E7.EasyResult.Errors;
 using static E7.EasyResult.Tests.Services.ResultSimulatorService;
 
 namespace E7.EasyResult.Tests;
