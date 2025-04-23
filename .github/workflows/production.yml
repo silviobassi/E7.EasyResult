@@ -4,18 +4,18 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'LICENSE'
-      - '.gitignore'
-      - '.github/workflows/production.yml'
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - '.github/**'
   workflow_dispatch:
 
 jobs:
-  tests:
+  build-test-package:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -29,15 +29,6 @@ jobs:
 
       - name: Run Tests
         run: dotnet test --configuration Release
-  
-  generate-version:
-    runs-on: ubuntu-latest
-    needs: tests
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v4
 
       - name: Github Tag Bump
         id: tab_bump
@@ -46,21 +37,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INITIAL_VERSION: 1.0.0
           DEFAULT_BUMP: patch
-    
-    outputs:
-      new_version: ${{ steps.tab_bump.outputs.new_tag }}
-  
-  package-and-publish-lib:
-    runs-on: ubuntu-latest
-    needs: generate-version
-    
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
 
       - name: Copy LICENSE
         run: cp LICENSE src/E7.EasyResult/
@@ -83,13 +59,9 @@ jobs:
         run: |
           dotnet pack src/E7.EasyResult/ \
           --configuration Release \
-          -p:PackageVersion=${{ needs.generate-version.outputs.new_version }} \
+          -p:PackageVersion=${{ steps.tab_bump.outputs.new_tag }} \
           -p:RepositoryUrl=https://github.com/silviobassi/E7.EasyResult \
           -o packages
 
       - name: Publish NuGet Package
         run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.PUSH_NUGET }} --source https://api.nuget.org/v3/index.json
-
-
-
-
