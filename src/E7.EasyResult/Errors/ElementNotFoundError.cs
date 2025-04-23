@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace E7.EasyResult.Errors;
+namespace ServicoProcessamento.Communication.E7.EasyResult.Errors;
 
 /// <summary>
 /// Represents an error that occurs when an object is not found.
@@ -14,8 +14,8 @@ public sealed class ElementNotFoundError()
     /// Gets the list of error messages.
     /// </summary>
     /// <returns>A list containing the detail message of the error.</returns>
-    public override List<object> GetErrorsMessage() => [Detail];
-
+    public override List<string?> GetErrorsMessage() => [Message];
+    
     /// <summary>
     /// Gets the HTTP status code associated with the error.
     /// </summary>

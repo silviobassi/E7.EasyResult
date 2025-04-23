@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace E7.EasyResult.Errors;
+namespace ServicoProcessamento.Communication.E7.EasyResult.Errors;
 
 /// <summary>
 /// Represents an abstract base class for application errors.
@@ -10,12 +10,12 @@ namespace E7.EasyResult.Errors;
 /// <param name="errorCodeName">The name of the error code.</param>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public abstract class AppError(string detail, ErrorType errorType, string errorCodeName)
+public abstract class AppError(string? message, ErrorType errorType, string errorCodeName)
 {
     /// <summary>
     /// Gets the detail message of the error.
     /// </summary>
-    protected string Detail { get; } = detail;
+    protected string? Message { get; } = message;
 
     /// <summary>
     /// Gets the type of the error.
@@ -28,14 +28,11 @@ public abstract class AppError(string detail, ErrorType errorType, string errorC
     public string ErrorCodeName { get; } = errorCodeName;
 
     /// <summary>
-    /// Gets the list of error messages.
-    /// </summary>
-    /// <returns>A list of error messages.</returns>
-    public abstract List<object> GetErrorsMessage();
-
-    /// <summary>
     /// Gets the HTTP status code associated with the error.
     /// </summary>
     /// <returns>The HTTP status code <see cref="HttpStatusCode"/>.</returns>
     public abstract HttpStatusCode GetHttpStatusCode();
+
+    public abstract List<string?> GetErrorsMessage();
+    
 }

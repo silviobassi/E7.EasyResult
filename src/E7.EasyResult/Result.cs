@@ -1,6 +1,6 @@
-﻿using E7.EasyResult.Errors;
+﻿using ServicoProcessamento.Communication.E7.EasyResult.Errors;
 
-namespace E7.EasyResult;
+namespace ServicoProcessamento.Communication.E7.EasyResult;
 
 /// <summary>
 /// Represents the result of an operation, indicating success or failure.
@@ -12,10 +12,7 @@ public class Result
     /// </summary>
     public bool IsSuccess { get; }
 
-    /// <summary>
-    /// Gets a value indicating whether the result represents a failure.
-    /// </summary>
-    public bool IsFailure => !IsSuccess;
+    public bool IsFailure { get; private set; }
 
     /// <summary>
     /// Gets the error associated with the result, if any.
@@ -30,7 +27,30 @@ public class Result
     protected Result(bool isSuccess, AppError? error)
     {
         IsSuccess = isSuccess;
+        IsFailure = !IsSuccess;
+
         Error = error;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    public static Result<TValue> Create<TValue>(TValue? value)
+    {
+        return value is not null
+            ? Result<TValue>.Success(value)
+            : Result<TValue>.Failure(new FailToCreateObjectError())!;
+    }
+
+    public static async Task<Result<T>> Create<T>(Task<T> value)
+    {
+        var result = await value;
+        return result is not null
+            ? Result<T>.Success(result)
+            : Result<T>.Failure(new FailToCreateObjectError())!;
     }
 
     /// <summary>
@@ -46,11 +66,12 @@ public class Result
     /// <returns>A <see cref="Result"/> instance representing failure.</returns>
     public static Result Failure(AppError? error) => new(false, error);
 
+
     /// <summary>
     /// Implicitly converts an <see cref="AppError"/> to a failed <see cref="Result"/>.
     /// </summary>
     /// <param name="error">The error to convert.</param>
-    public static implicit operator Result(AppError error) => Failure(error);
+    public static implicit operator Result(AppError? error) => Failure(error);
 
     /// <summary>
     /// Checks if the result's error matches the specified error type.
@@ -99,7 +120,7 @@ public class Result<T> : Result
     /// <typeparam name="TError">The type of the error.</typeparam>
     /// <param name="error">The error associated with the failure.</param>
     /// <returns>A <see cref="Result{T}"/> instance representing failure.</returns>
-    public static Result<T?> Failure<TError>(TError error) where TError : AppError => new(default, false, error);
+    protected static Result<T?> Failure<TError>(TError error) where TError : AppError => new(default, false, error);
 
     /// <summary>
     /// Implicitly converts a value of type <typeparamref name="T"/> to a successful <see cref="Result{T}"/>.
@@ -111,11 +132,14 @@ public class Result<T> : Result
     /// Implicitly converts an <see cref="AppError"/> to a failed <see cref="Result{T}"/>.
     /// </summary>
     /// <param name="error">The error to convert.</param>
-    public static implicit operator Result<T?>(AppError error) => Failure(error);
+    public static implicit operator Result<T?>(AppError? error) => Failure(error);
 
     /// <summary>
     /// Returns a string representation of the result.
     /// </summary>
     /// <returns>A string indicating success with the value or failure with the associated error.</returns>
     public override string ToString() => IsSuccess ? $"Success: {Value}" : $"Failure: {Error}";
+
+    // I need Failure accepted uther error type
+    public static Result<T> Failure(AppError error) => new(default, false, error);
 }

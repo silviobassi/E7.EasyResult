@@ -1,6 +1,7 @@
-﻿using E7.EasyResult.Errors;
-using E7.EasyResult.Tests.Responses;
-using FluentAssertions;
+﻿using FluentAssertions;
+using ServicoProcessamento.Communication.E7.EasyResult;
+using ServicoProcessamento.Communication.E7.EasyResult.Errors;
+using static E7.EasyResult.Tests.Services.ResultSimulatorService;
 
 namespace E7.EasyResult.Tests;
 
@@ -70,5 +71,116 @@ public class ResultTests
         var result = Result.Failure(error);
 
         result.ToString().Should().Be($"Failure: {error}");
+    }
+
+    [Fact]
+    public void Bind_ShouldReturnFailedResult()
+    {
+        var error = new ElementNotFoundError();
+        var initialResult = Result<int>.Failure(error);
+
+        var result = initialResult.Bind(_ => Result<int>.Success(42));
+
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be(error);
+        result.Value.Should().NotBe(42);
+    }
+
+    [Fact]
+    public void Bind_SuccessResult_ReturnsSuccessResult()
+    {
+        var initialResult = Result<int>.Success(42);
+        var result = initialResult.Bind(_ => Result<string>.Success("42"));
+
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be("42");
+        result.Error.Should().BeNull();
+    }
+
+    [Fact]
+    public void MapFailure_ShouldReturn_SuccessWithResult()
+    {
+        var result = Result<int>.Success(1);
+
+        var mappedResult = result.MapFailure(_ => new ElementNotFoundError());
+
+        mappedResult.IsSuccess.Should().BeTrue();
+        mappedResult.Value.Should().Be(1);
+        mappedResult.Error.Should().BeNull();
+    }
+
+    [Fact]
+    public void MapFailure_ShouldReturn_FailureWithResult()
+    {
+        var error = new ElementNotFoundError();
+        var result = Result<int>.Failure(error);
+
+        var mappedResult = result.MapFailure(_ => new ElementNotFoundError());
+
+        mappedResult.IsSuccess.Should().BeFalse();
+        mappedResult.Value.Should().Be(0);
+        mappedResult.Error.Should().BeOfType<ElementNotFoundError>();
+    }
+
+    [Fact]
+    public void Map_ShouldReturn_SuccessWithResult()
+    {
+        var result = Result<int>.Success(1);
+
+        var mappedResult = result.Map(x => x.ToString());
+
+        mappedResult.IsSuccess.Should().BeTrue();
+        mappedResult.Value.Should().Be("1");
+        mappedResult.Error.Should().BeNull();
+    }
+
+    [Fact]
+    public void Map_ShouldReturn_FailureWithResult()
+    {
+        var error = new ElementNotFoundError();
+        var result = Result<int>.Failure(error);
+
+        var mappedResult = result.Map(x => x.ToString());
+
+        mappedResult.IsSuccess.Should().BeFalse();
+        mappedResult.Value.Should().BeNull();
+        mappedResult.Error.Should().BeOfType<ElementNotFoundError>();
+    }
+
+
+    [Fact]
+    public void Tap_ShouldReturn_SuccessWithResult()
+    {
+        var result = Result<int>.Success(1);
+        var value = 2;
+
+        var mappedResult = result.Tap(x => value = x);
+
+        mappedResult.IsSuccess.Should().BeTrue();
+        mappedResult.Value.Should().Be(1);
+        value.Should().Be(result.Value);
+        mappedResult.Error.Should().BeNull();
+    }
+
+    [Fact]
+    public void Bind_ShouldReturnFailedResult_On_EnRailway()
+    {
+        //var result = Result<ObjectResponse>.Success(new ObjectResponse("ddd", "ccc"));
+        
+        var result = GetResult(false);
+
+        string value = "42";
+
+        result
+            .Map(x => x)
+            .Bind(_ => result.MapFailure(x => x))
+            .Bind(_ => CheckResult(0))
+            .Tap(x => value = x.Code);
+
+
+        result.IsSuccess.Should().BeFalse();
+        result.Value.Should().BeOfType<ElementNotFoundError>();
+        result.Value.Should().NotBeNull();
+
     }
 }

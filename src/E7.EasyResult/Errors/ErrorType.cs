@@ -1,4 +1,4 @@
-namespace E7.EasyResult.Errors;
+namespace ServicoProcessamento.Communication.E7.EasyResult.Errors;
 
 /// <summary>
 /// Defines the types of errors that can occur in the application when the result pattern is applied.
@@ -41,4 +41,6 @@ public enum ErrorType
     /// Error related to unauthorized access.
     /// </summary>
     UnauthorizedAccess = 700,
+
+    FailToCreateObject = 800,
 }
