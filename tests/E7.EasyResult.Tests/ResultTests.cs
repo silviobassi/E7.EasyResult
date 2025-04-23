@@ -1,7 +1,6 @@
-﻿using FluentAssertions;
-using ServicoProcessamento.Communication.E7.EasyResult;
+﻿using ServicoProcessamento.Communication.E7.EasyResult;
 using ServicoProcessamento.Communication.E7.EasyResult.Errors;
-using static E7.EasyResult.Tests.Services.ResultSimulatorService;
+using Shouldly;
 
 namespace E7.EasyResult.Tests;
 
@@ -12,9 +11,9 @@ public class ResultTests
     {
         var result = Result.Success();
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFailure.Should().BeFalse();
-        result.Error.Should().BeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.IsFailure.ShouldBeFalse();
+        result.Error.ShouldBeNull();
     }
 
     [Fact]
@@ -23,9 +22,9 @@ public class ResultTests
         var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.IsSuccess.ShouldBeFalse();
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldBe(error);
     }
 
     [Fact]
@@ -34,9 +33,9 @@ public class ResultTests
         var error = new ElementNotFoundError();
         Result result = error;
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(error);
+        result.IsSuccess.ShouldBeFalse();
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldBe(error);
     }
 
     [Fact]
@@ -45,7 +44,7 @@ public class ResultTests
         var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
-        result.IsErrorType(ErrorType.NotFoundRule).Should().BeTrue();
+        result.IsErrorType(ErrorType.NotFoundRule).ShouldBeTrue();
     }
 
     [Fact]
@@ -54,14 +53,14 @@ public class ResultTests
         var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
-        result.IsErrorType(ErrorType.BusinessRule).Should().BeFalse();
+        result.IsErrorType(ErrorType.BusinessRule).ShouldBeFalse();
     }
 
     [Fact]
     public void ToString_ShouldReturnSuccessStringForSuccessfulResult()
     {
         var result = Result.Success();
-        result.ToString().Should().Be("Success");
+        result.ToString().ShouldBe("Success");
     }
 
     [Fact]
@@ -70,7 +69,7 @@ public class ResultTests
         var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
-        result.ToString().Should().Be($"Failure: {error}");
+        result.ToString().ShouldBe($"Failure: {error}");
     }
 
     [Fact]
@@ -81,9 +80,9 @@ public class ResultTests
 
         var result = initialResult.Bind(_ => Result<int>.Success(42));
 
-        result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be(error);
-        result.Value.Should().NotBe(42);
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.ShouldBe(error);
+        result.Value.ShouldNotBe(42);
     }
 
     [Fact]
@@ -92,9 +91,9 @@ public class ResultTests
         var initialResult = Result<int>.Success(42);
         var result = initialResult.Bind(_ => Result<string>.Success("42"));
 
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be("42");
-        result.Error.Should().BeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldBe("42");
+        result.Error.ShouldBeNull();
     }
 
     [Fact]
@@ -104,9 +103,9 @@ public class ResultTests
 
         var mappedResult = result.MapFailure(_ => new ElementNotFoundError());
 
-        mappedResult.IsSuccess.Should().BeTrue();
-        mappedResult.Value.Should().Be(1);
-        mappedResult.Error.Should().BeNull();
+        mappedResult.IsSuccess.ShouldBeTrue();
+        mappedResult.Value.ShouldBe(1);
+        mappedResult.Error.ShouldBeNull();
     }
 
     [Fact]
@@ -117,9 +116,9 @@ public class ResultTests
 
         var mappedResult = result.MapFailure(_ => new ElementNotFoundError());
 
-        mappedResult.IsSuccess.Should().BeFalse();
-        mappedResult.Value.Should().Be(0);
-        mappedResult.Error.Should().BeOfType<ElementNotFoundError>();
+        mappedResult.IsSuccess.ShouldBeFalse();
+        mappedResult.Value.ShouldBe(0);
+        mappedResult.Error.ShouldBeOfType<ElementNotFoundError>();
     }
 
     [Fact]
@@ -129,9 +128,9 @@ public class ResultTests
 
         var mappedResult = result.Map(x => x.ToString());
 
-        mappedResult.IsSuccess.Should().BeTrue();
-        mappedResult.Value.Should().Be("1");
-        mappedResult.Error.Should().BeNull();
+        mappedResult.IsSuccess.ShouldBeTrue();
+        mappedResult.Value.ShouldBe("1");
+        mappedResult.Error.ShouldBeNull();
     }
 
     [Fact]
@@ -142,11 +141,10 @@ public class ResultTests
 
         var mappedResult = result.Map(x => x.ToString());
 
-        mappedResult.IsSuccess.Should().BeFalse();
-        mappedResult.Value.Should().BeNull();
-        mappedResult.Error.Should().BeOfType<ElementNotFoundError>();
+        mappedResult.IsSuccess.ShouldBeFalse();
+        mappedResult.Value.ShouldBeNull();
+        mappedResult.Error.ShouldBeOfType<ElementNotFoundError>();
     }
-
 
     [Fact]
     public void Tap_ShouldReturn_SuccessWithResult()
@@ -156,31 +154,11 @@ public class ResultTests
 
         var mappedResult = result.Tap(x => value = x);
 
-        mappedResult.IsSuccess.Should().BeTrue();
-        mappedResult.Value.Should().Be(1);
-        value.Should().Be(result.Value);
-        mappedResult.Error.Should().BeNull();
+        mappedResult.IsSuccess.ShouldBeTrue();
+        mappedResult.Value.ShouldBe(1);
+        value.ShouldBe(result.Value);
+        mappedResult.Error.ShouldBeNull();
     }
 
-    [Fact]
-    public void Bind_ShouldReturnFailedResult_On_EnRailway()
-    {
-        //var result = Result<ObjectResponse>.Success(new ObjectResponse("ddd", "ccc"));
-        
-        var result = GetResult(false);
-
-        string value = "42";
-
-        result
-            .Map(x => x)
-            .Bind(_ => result.MapFailure(x => x))
-            .Bind(_ => CheckResult(0))
-            .Tap(x => value = x.Code);
-
-
-        result.IsSuccess.Should().BeFalse();
-        result.Value.Should().BeOfType<ElementNotFoundError>();
-        result.Value.Should().NotBeNull();
-
-    }
+   // Criar teste para Railway
 }

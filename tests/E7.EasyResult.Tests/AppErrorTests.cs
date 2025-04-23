@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using FluentAssertions;
 using ServicoProcessamento.Communication.E7.EasyResult.Errors;
+using Shouldly;
 
 namespace E7.EasyResult.Tests;
 
@@ -13,12 +13,12 @@ public class AppErrorTests
 
         var result = error.GetErrorsMessage();
 
-        result.Should().NotBeNull();
-        result.Should().HaveCount(1);
-        result.Should().Contain("Object not found.");
-        error.GetHttpStatusCode().Should().Be(HttpStatusCode.NotFound);
-        error.ErrorType.Should().Be(ErrorType.NotFoundRule);
-        error.ErrorCodeName.Should().Be(nameof(ElementNotFoundError));
+        result.ShouldNotBeNull();
+        result.Count.ShouldBe(1);
+        result.ShouldContain("Object not found.");
+        error.GetHttpStatusCode().ShouldBe(HttpStatusCode.NotFound);
+        error.ErrorType.ShouldBe(ErrorType.NotFoundRule);
+        error.ErrorCodeName.ShouldBe(nameof(ElementNotFoundError));
     }
 
     [Fact]
@@ -26,13 +26,14 @@ public class AppErrorTests
     {
         var error = new InvalidFieldsError(["Name required", "Email required", "Password required"]);
 
-        error.Should().NotBeNull();
-        error.GetErrorsMessage().Should().HaveCount(3);
-        error.GetErrorsMessage().Should().Contain("Name required");
-        error.GetErrorsMessage().Should().Contain("Email required");
-        error.GetErrorsMessage().Should().Contain("Password required");
-        error.GetHttpStatusCode().Should().Be(HttpStatusCode.BadRequest);
-        error.ErrorType.Should().Be(ErrorType.ValidationRule);
-        error.ErrorCodeName.Should().Be(nameof(InvalidFieldsError));
+        error.ShouldNotBeNull();
+        var messages = error.GetErrorsMessage();
+        messages.Count.ShouldBe(3);
+        messages.ShouldContain("Name required");
+        messages.ShouldContain("Email required");
+        messages.ShouldContain("Password required");
+        error.GetHttpStatusCode().ShouldBe(HttpStatusCode.BadRequest);
+        error.ErrorType.ShouldBe(ErrorType.ValidationRule);
+        error.ErrorCodeName.ShouldBe(nameof(InvalidFieldsError));
     }
 }

@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using ServicoProcessamento.Communication.E7.EasyResult;
+﻿using ServicoProcessamento.Communication.E7.EasyResult;
 using ServicoProcessamento.Communication.E7.EasyResult.Errors;
+using Shouldly;
 
 namespace E7.EasyResult.Tests;
 
@@ -13,10 +13,10 @@ public class ResultGenericTests
 
         var result = Result<string>.Success(value);
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFailure.Should().BeFalse();
-        result.Value.Should().Be(value);
-        result.Error.Should().BeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.IsFailure.ShouldBeFalse();
+        result.Value.ShouldBe(value);
+        result.Error.ShouldBeNull();
     }
 
     [Fact]
@@ -26,10 +26,10 @@ public class ResultGenericTests
 
         var result = Result<string>.Failure(error);
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFailure.Should().BeTrue();
-        result.Value.Should().BeNull();
-        result.Error.Should().Be(error);
+        result.IsSuccess.ShouldBeFalse();
+        result.IsFailure.ShouldBeTrue();
+        result.Value.ShouldBeNull();
+        result.Error.ShouldBe(error);
     }
 
     [Fact]
@@ -39,10 +39,10 @@ public class ResultGenericTests
 
         Result<string> result = value;
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFailure.Should().BeFalse();
-        result.Value.Should().Be(value);
-        result.Error.Should().BeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.IsFailure.ShouldBeFalse();
+        result.Value.ShouldBe(value);
+        result.Error.ShouldBeNull();
     }
 
     [Fact]
@@ -52,10 +52,10 @@ public class ResultGenericTests
 
         Result<string> result = error!;
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFailure.Should().BeTrue();
-        result.Value.Should().BeNull();
-        result.Error.Should().Be(error);
+        result.IsSuccess.ShouldBeFalse();
+        result.IsFailure.ShouldBeTrue();
+        result.Value.ShouldBeNull();
+        result.Error.ShouldBe(error);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class ResultGenericTests
 
         var result = Result<string>.Success(value);
 
-        result.ToString().Should().Be($"Success: {value}");
+        result.ToString().ShouldBe($"Success: {value}");
     }
 
     [Fact]
@@ -75,6 +75,6 @@ public class ResultGenericTests
 
         var result = Result<string>.Failure(error);
 
-        result.ToString().Should().Be($"Failure: {error}");
+        result.ToString().ShouldBe($"Failure: {error}");
     }
 }

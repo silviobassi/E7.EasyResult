@@ -1,7 +1,7 @@
 ﻿using E7.EasyResult.Tests.Responses;
-using FluentAssertions;
 using ServicoProcessamento.Communication.E7.EasyResult;
 using ServicoProcessamento.Communication.E7.EasyResult.Errors;
+using Shouldly;
 using static E7.EasyResult.Tests.Services.ResultSimulatorService;
 
 namespace E7.EasyResult.Tests;
@@ -17,9 +17,9 @@ public class ResultHandlerTests
             () => result,
             appError => appError
         );
-        
-        actionResult.Value.Should().Be(result.Value);
-        actionResult.Error.Should().BeNull();
+
+        actionResult.Value.ShouldBe(result.Value);
+        actionResult.Error.ShouldBeNull();
     }
 
     [Fact]
@@ -32,8 +32,8 @@ public class ResultHandlerTests
             appError => appError
         );
 
-        actionResult.Error.Should().Be(result.Error);
-        actionResult.Value.Should().BeNull();
+        actionResult.Error.ShouldBe(result.Error);
+        actionResult.Value.ShouldBeNull();
     }
 
     [Fact]
@@ -46,10 +46,9 @@ public class ResultHandlerTests
             appError => new BadRequest(appError)
         );
 
+        actionResult.ShouldBeOfType<Ok>();
         var okResult = (Ok)actionResult;
-
-        actionResult.Should().BeOfType<Ok>();
-        okResult.Value.Should().Be(result.Value);
+        okResult.Value.ShouldBe(result.Value);
     }
 
     [Fact]
@@ -62,10 +61,9 @@ public class ResultHandlerTests
             appError => new BadRequest(appError)
         );
 
+        actionResult.ShouldBeOfType<BadRequest>();
         var badRequest = (BadRequest)actionResult;
-
-        actionResult.Should().BeOfType<BadRequest>();
-        badRequest.Error.Should().Be(result.Error);
+        badRequest.Error.ShouldBe(result.Error);
     }
 }
 
