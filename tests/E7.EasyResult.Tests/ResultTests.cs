@@ -158,6 +158,4 @@ public class ResultTests
         value.ShouldBe(result.Value);
         mappedResult.Error.ShouldBeNull();
     }
-
-   // Criar teste para Railway
 }
