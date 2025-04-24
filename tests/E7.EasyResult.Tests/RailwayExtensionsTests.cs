@@ -201,4 +201,71 @@ public class RailwayExtensionsTests
 
         wasCalled.ShouldBeFalse();
     }
+    
+    [Fact]
+    public async Task Map_Async_Should_Transform_Value_When_Success()
+    {
+        var result = Result<int>.Success(3);
+
+        var mapped = await result.Map(async x =>
+        {
+            await Task.Delay(1);
+            return x * 10;
+        });
+
+        mapped.IsSuccess.ShouldBeTrue();
+        mapped.Value.ShouldBe(30);
+    }
+    
+    [Fact]
+    public async Task Map_Async_Should_Not_Invoke_Function_When_Failure()
+    {
+        var error = new DummyError();
+        var result = Result<int>.Failure(error);
+
+        var wasCalled = false;
+
+        var mapped = await result.Map(x =>
+        {
+            wasCalled = true;
+            return Task.FromResult(x * 10);
+        });
+
+        wasCalled.ShouldBeFalse(); // Garante que a função não foi chamada
+        mapped.IsFailure.ShouldBeTrue();
+        mapped.Error.ShouldBe(error);
+    }
+
+    
+    [Fact]
+    public async Task Tap_Async_With_Task_Result_Should_Invoke_When_Success()
+    {
+        var wasCalled = false;
+        var result = Task.FromResult(Result<string>.Success("ok"));
+
+        await result.Tap(async value =>
+        {
+            await Task.Delay(1);
+            wasCalled = value == "ok";
+        });
+
+        wasCalled.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Tap_Async_With_Task_Result_Should_Not_Invoke_When_Failure()
+    {
+        var wasCalled = false;
+        var error = new DummyError();
+        var result = Task.FromResult(Result<string>.Failure(error));
+
+        await result.Tap(async value =>
+        {
+            wasCalled = true;
+            await Task.Delay(1);
+        });
+
+        wasCalled.ShouldBeFalse();
+    }
+
 }

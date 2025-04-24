@@ -13,7 +13,7 @@ public class Result
     public bool IsSuccess { get; }
 
     /// <summary>
-    /// 
+    /// Gets a value indicating whether the result represents a failure.
     /// </summary>
     public bool IsFailure { get; private set; }
 
@@ -31,16 +31,15 @@ public class Result
     {
         IsSuccess = isSuccess;
         IsFailure = !IsSuccess;
-
         Error = error;
     }
 
     /// <summary>
-    /// 
+    /// Creates a <see cref="Result{T}"/> with a value. If the value is not null, it returns a successful result; otherwise, a failure.
     /// </summary>
-    /// <param name="value"></param>
-    /// <typeparam name="TValue"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <param name="value">The value to be used in the result.</param>
+    /// <returns>A <see cref="Result{T}"/> representing either success or failure.</returns>
     public static Result<TValue> Create<TValue>(TValue? value)
     {
         return value is not null
@@ -48,6 +47,12 @@ public class Result
             : Result<TValue>.Failure(new FailToCreateObjectError())!;
     }
 
+    /// <summary>
+    /// Asynchronously creates a <see cref="Result{T}"/> with a value. If the value is not null, it returns a successful result; otherwise, a failure.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <param name="value">A task that represents the asynchronous operation returning the value.</param>
+    /// <returns>A <see cref="Result{T}"/> representing either success or failure.</returns>
     public static async Task<Result<T>> Create<T>(Task<T> value)
     {
         var result = await value;
@@ -57,18 +62,17 @@ public class Result
     }
 
     /// <summary>
-    /// Creates a successful result.
+    /// Creates a successful result without a value.
     /// </summary>
     /// <returns>A <see cref="Result"/> instance representing success.</returns>
     public static Result Success() => new(true, null);
 
     /// <summary>
-    /// Creates a failed result.
+    /// Creates a failed result with an error.
     /// </summary>
     /// <param name="error">The error associated with the failure.</param>
     /// <returns>A <see cref="Result"/> instance representing failure.</returns>
     public static Result Failure(AppError? error) => new(false, error);
-
 
     /// <summary>
     /// Implicitly converts an <see cref="AppError"/> to a failed <see cref="Result"/>.
@@ -116,7 +120,6 @@ public class Result<T> : Result
     /// <returns>A <see cref="Result{T}"/> instance representing success.</returns>
     public static Result<T> Success(T value) => new(value, true, null);
 
-
     /// <summary>
     /// Creates a failed result with an error.
     /// </summary>
@@ -135,7 +138,7 @@ public class Result<T> : Result
     /// Implicitly converts an <see cref="AppError"/> to a failed <see cref="Result{T}"/>.
     /// </summary>
     /// <param name="error">The error to convert.</param>
-    public static implicit operator Result<T?>(AppError? error) => Failure(error);
+    public static implicit operator Result<T?>(AppError? error) => Failure(error!)!;
 
     /// <summary>
     /// Returns a string representation of the result.
@@ -143,11 +146,10 @@ public class Result<T> : Result
     /// <returns>A string indicating success with the value or failure with the associated error.</returns>
     public override string ToString() => IsSuccess ? $"Success: {Value}" : $"Failure: {Error}";
 
-    // I need Failure accepted uther error type
     /// <summary>
-    /// 
+    /// Creates a failed <see cref="Result{T}"/> with the specified error.
     /// </summary>
-    /// <param name="error"></param>
-    /// <returns></returns>
-    public new static Result<T> Failure(AppError error) => new(default, false, error);
+    /// <param name="error">The error associated with the failure.</param>
+    /// <returns>A <see cref="Result{T}"/> instance representing failure.</returns>
+    public new static Result<T> Failure(AppError error) => new(default!, false, error);
 }

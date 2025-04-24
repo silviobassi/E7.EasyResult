@@ -3,22 +3,32 @@
 namespace E7.EasyResult.Errors;
 
 /// <summary>
-/// Represents an error that occurs when an object is not found.
+/// Represents a domain-specific error indicating that a requested element or resource could not be found.
+/// This error typically maps to HTTP 404 and is useful in both domain and API contexts.
 /// </summary>
+/// <remarks>
+/// Use this error when an entity or record is expected but does not exist in the current context or data store.
+/// </remarks>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
 public sealed class ElementNotFoundError()
     : AppError("Object not found.", ErrorType.NotFoundRule, nameof(ElementNotFoundError))
 {
     /// <summary>
-    /// Gets the list of error messages.
+    /// Returns a collection of user-facing error messages related to this error.
+    /// In this case, it contains a single message describing the missing object.
     /// </summary>
-    /// <returns>A list containing the detail message of the error.</returns>
+    /// <returns>
+    /// A list with a single entry: the detail message of the error.
+    /// </returns>
     public override List<string?> GetErrorsMessage() => [Message];
-    
+
     /// <summary>
-    /// Gets the HTTP status code associated with the error.
+    /// Returns the HTTP status code that corresponds to this error type.
+    /// Typically used in API responses to signal that the requested resource was not found.
     /// </summary>
-    /// <returns>The HTTP status code for not found (404) <see cref="Result{T}"/>.</returns>
+    /// <returns>
+    /// The <see cref="HttpStatusCode.NotFound"/> status code (404).
+    /// </returns>
     public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.NotFound;
 }

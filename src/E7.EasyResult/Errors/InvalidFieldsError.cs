@@ -3,23 +3,33 @@
 namespace E7.EasyResult.Errors;
 
 /// <summary>
-/// Represents an error that occurs when fields are invalid.
+/// Represents an application error that occurs when one or more input fields fail validation.
+/// Typically used for client-side input validation scenarios.
 /// </summary>
-/// <param name="errorsMessages">The list of error messages.</param>
+/// <param name="errorsMessages">
+/// A list of messages describing each validation failure encountered. These messages are typically shown ao usuário final ou retornadas em uma resposta de API.
+/// </param>
+/// <remarks>
+/// This error is commonly mapped to HTTP status code 400 (Bad Request) to indicate client-side input issues.
+/// </remarks>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
 public sealed class InvalidFieldsError(List<string?> errorsMessages)
-    : AppError("Invalid Fields.", ErrorType.ValidationRule, nameof(InvalidFieldsError))
+    : AppError("Invalid fields.", ErrorType.ValidationRule, nameof(InvalidFieldsError))
 {
     /// <summary>
-    /// Gets the list of error messages.
+    /// Returns the collection of specific validation error messages associated with this error.
     /// </summary>
-    /// <returns>A list of error messages.</returns>
+    /// <returns>
+    /// A <see cref="List{T}"/> of strings containing the details of each validation failure.
+    /// </returns>
     public override List<string?> GetErrorsMessage() => errorsMessages;
 
     /// <summary>
-    /// Gets the HTTP status code associated with the error.
+    /// Gets the HTTP status code that represents this validation error.
     /// </summary>
-    /// <returns>The HTTP status code for invalid fields (400) <see cref="Result{T}"/>.</returns>
+    /// <returns>
+    /// The <see cref="HttpStatusCode.BadRequest"/> status code (400), indicating that the client submitted invalid input.
+    /// </returns>
     public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.BadRequest;
 }
