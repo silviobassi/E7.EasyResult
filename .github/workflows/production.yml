@@ -8,6 +8,8 @@ on:
       - 'src/**'
       - 'tests/**'
       - '.github/**'
+      - 'README.md'
+      - 'LICENSE'
   workflow_dispatch:
 
 jobs:
