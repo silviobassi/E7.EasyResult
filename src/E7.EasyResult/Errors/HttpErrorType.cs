@@ -10,7 +10,7 @@ namespace E7.EasyResult.Errors;
 /// </remarks>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public enum ErrorType
+public enum HttpErrorType
 {
     /// <summary>
     /// Represents an error caused by an invalid or malformed request.

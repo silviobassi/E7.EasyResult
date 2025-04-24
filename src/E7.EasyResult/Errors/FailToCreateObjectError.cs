@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 
 namespace E7.EasyResult.Errors;
 
@@ -12,7 +13,7 @@ namespace E7.EasyResult.Errors;
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
 internal class FailToCreateObjectError()
-    : AppError("Failed to create object.", ErrorType.FailToCreateObject, nameof(FailToCreateObjectError))
+    : HttpError("Failed to create object.", HttpErrorType.FailToCreateObject, nameof(FailToCreateObjectError))
 {
     /// <summary>
     /// Returns the HTTP status code that best represents this type of error.

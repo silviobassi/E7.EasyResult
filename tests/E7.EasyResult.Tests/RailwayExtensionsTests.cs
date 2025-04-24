@@ -7,13 +7,8 @@ namespace E7.EasyResult.Tests;
 public class RailwayExtensionsTests
 {
     private class DummyError()
-        : AppError("Object not found.", ErrorType.NotFoundRule, nameof(DummyError))
+        : AppError("Object not found.", HttpErrorType.NotFoundRule, nameof(DummyError))
     {
-        public override HttpStatusCode GetHttpStatusCode()
-        {
-            return HttpStatusCode.NotFound;
-        }
-
         public override List<string?> GetErrorsMessage()
         {
             return [Message];
@@ -201,7 +196,7 @@ public class RailwayExtensionsTests
 
         wasCalled.ShouldBeFalse();
     }
-    
+
     [Fact]
     public async Task Map_Async_Should_Transform_Value_When_Success()
     {
@@ -216,7 +211,7 @@ public class RailwayExtensionsTests
         mapped.IsSuccess.ShouldBeTrue();
         mapped.Value.ShouldBe(30);
     }
-    
+
     [Fact]
     public async Task Map_Async_Should_Not_Invoke_Function_When_Failure()
     {
@@ -236,7 +231,7 @@ public class RailwayExtensionsTests
         mapped.Error.ShouldBe(error);
     }
 
-    
+
     [Fact]
     public async Task Tap_Async_With_Task_Result_Should_Invoke_When_Success()
     {
@@ -259,7 +254,7 @@ public class RailwayExtensionsTests
         var error = new DummyError();
         var result = Task.FromResult(Result<string>.Failure(error));
 
-        await result.Tap(async value =>
+        await result.Tap(async _ =>
         {
             wasCalled = true;
             await Task.Delay(1);
@@ -267,5 +262,4 @@ public class RailwayExtensionsTests
 
         wasCalled.ShouldBeFalse();
     }
-
 }

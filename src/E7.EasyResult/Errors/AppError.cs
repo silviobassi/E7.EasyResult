@@ -1,55 +1,52 @@
-﻿using System.Net;
-
-namespace E7.EasyResult.Errors;
+﻿namespace E7.EasyResult.Errors;
 
 /// <summary>
-/// Represents a standardized base class for application-level errors,
-/// providing a consistent structure for error categorization, identification, and messaging.
+/// Serves as the abstract base class for all structured application errors,
+/// offering a consistent model for categorizing, identifying, and communicating issues
+/// across different layers of an application (e.g., domain, application, infrastructure).
 /// </summary>
-/// <param name="message">A human-readable message describing the error.</param>
-/// <param name="errorType">The high-level classification of the error (e.g., Validation, NotFound, Conflict...).</param>
-/// <param name="errorCodeName">A symbolic code name used to identify the specific error.</param>
 /// <remarks>
-/// This class is intended to be inherited by domain-specific error types, enabling rich,
-/// structured error handling across application boundaries (e.g., domain, application, API).
+/// This class encapsulates the core metadata for an error, such as its type,
+/// identifier, and descriptive message. It is designed to be extended by more specific
+/// error types (e.g., domain errors, validation errors, infrastructure errors),
+/// promoting rich error semantics and centralized handling strategies.
+///
+/// The use of a generic <see cref="Enum"/> for the error type allows domain- or context-specific
+/// enumerations to be used for classification, enabling extensibility without sacrificing structure.
 /// </remarks>
+/// <param name="message">A descriptive, developer-oriented message explaining the error context.</param>
+/// <param name="appErrorType">An enumeration value representing the error's classification.</param>
+/// <param name="errorCodeName">A symbolic, unique identifier for the error case, used for logging or API responses.</param>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public abstract class AppError(string? message, ErrorType errorType, string errorCodeName)
+public abstract class AppError(string? message, Enum appErrorType, string errorCodeName)
 {
     /// <summary>
-    /// Gets a human-readable message that describes the error in detail.
-    /// This message is intended for developers and internal diagnostics.
+    /// Gets a descriptive message that explains the error in technical terms.
+    /// Typically used for diagnostics, logs, or internal developer feedback.
     /// </summary>
     protected string? Message { get; } = message;
 
     /// <summary>
-    /// Gets the classification type of the error, typically used to drive decision-making
-    /// logic or determine the appropriate HTTP status code or UI treatment.
+    /// Gets the classification of the error.
+    /// This is typically an enumeration value that categorizes the error type
+    /// (e.g., Validation, NotFound, BusinessRuleViolation).
     /// </summary>
-    public ErrorType ErrorType { get; } = errorType;
+    public Enum AppErrorType { get; } = appErrorType;
 
     /// <summary>
-    /// Gets the symbolic name of the error code.
-    /// Useful for identifying specific errors in logs, telemetry, or external clients.
+    /// Gets the symbolic code name of the error, which can be used for identifying
+    /// and referencing specific error cases across systems and clients.
     /// </summary>
     public string ErrorCodeName { get; } = errorCodeName;
 
     /// <summary>
-    /// Returns the corresponding HTTP status code for the error.
-    /// This allows mapping of domain/application errors directly to HTTP response codes.
+    /// Provides a list of user-facing messages that describe the error in a way suitable for UI display or API consumers.
+    /// Each message should convey actionable or descriptive information relevant to the context of the error.
     /// </summary>
     /// <returns>
-    /// An <see cref="HttpStatusCode"/> that semantically represents the error.
-    /// </returns>
-    public abstract HttpStatusCode GetHttpStatusCode();
-
-    /// <summary>
-    /// Returns a list of user-facing error messages related to this error.
-    /// These messages may be presented to end users or consumed by client applications.
-    /// </summary>
-    /// <returns>
-    /// A collection of strings that describe the error in a user-friendly manner.
+    /// A list of strings representing user-friendly messages related to this error.
+    /// These may include validation hints, access denial reasons, or instructions for resolution.
     /// </returns>
     public abstract List<string?> GetErrorsMessage();
 }

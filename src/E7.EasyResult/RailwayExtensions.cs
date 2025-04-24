@@ -115,7 +115,7 @@ public static class RailwayExtensions
     /// <summary>
     /// Executes a function on the result's value and catches any exceptions, returning a failure with the provided error.
     /// </summary>
-    public static Result<TOut?> TryCatch<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> func, AppError? appError)
+    public static Result<TOut?> TryCatch<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> func, AppError appError)
     {
         try
         {
@@ -123,7 +123,7 @@ public static class RailwayExtensions
         }
         catch
         {
-            return Result<TOut>.Failure(appError!)!;
+            return Result<TOut>.Failure(appError)!;
         }
     }
 

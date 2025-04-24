@@ -43,7 +43,7 @@ public class ResultTests
         var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
-        result.IsErrorType(ErrorType.NotFoundRule).ShouldBeTrue();
+        result.IsErrorType(HttpErrorType.NotFoundRule).ShouldBeTrue();
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class ResultTests
         var error = new ElementNotFoundError();
         var result = Result.Failure(error);
 
-        result.IsErrorType(ErrorType.BusinessRule).ShouldBeFalse();
+        result.IsErrorType(HttpErrorType.BusinessRule).ShouldBeFalse();
     }
 
     [Fact]
