@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace ServicoProcessamento.Communication.E7.EasyResult.Errors;
+namespace E7.EasyResult.Errors;
 
 internal class FailToCreateObjectError() : AppError("Fail to object Create", ErrorType.FailToCreateObject,
     nameof(FailToCreateObjectError))

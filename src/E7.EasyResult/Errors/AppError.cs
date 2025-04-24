@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace ServicoProcessamento.Communication.E7.EasyResult.Errors;
+namespace E7.EasyResult.Errors;
 
 /// <summary>
 /// Represents an abstract base class for application errors.

@@ -1,6 +1,6 @@
-﻿using ServicoProcessamento.Communication.E7.EasyResult.Errors;
+﻿using E7.EasyResult.Errors;
 
-namespace ServicoProcessamento.Communication.E7.EasyResult;
+namespace E7.EasyResult;
 
 /// <summary>
 /// Represents the result of an operation, indicating success or failure.
@@ -12,6 +12,9 @@ public class Result
     /// </summary>
     public bool IsSuccess { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public bool IsFailure { get; private set; }
 
     /// <summary>
@@ -141,5 +144,10 @@ public class Result<T> : Result
     public override string ToString() => IsSuccess ? $"Success: {Value}" : $"Failure: {Error}";
 
     // I need Failure accepted uther error type
-    public static Result<T> Failure(AppError error) => new(default, false, error);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="error"></param>
+    /// <returns></returns>
+    public new static Result<T> Failure(AppError error) => new(default, false, error);
 }

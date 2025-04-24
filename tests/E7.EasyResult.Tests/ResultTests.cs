@@ -1,5 +1,4 @@
-﻿using ServicoProcessamento.Communication.E7.EasyResult;
-using ServicoProcessamento.Communication.E7.EasyResult.Errors;
+﻿using E7.EasyResult.Errors;
 using Shouldly;
 
 namespace E7.EasyResult.Tests;

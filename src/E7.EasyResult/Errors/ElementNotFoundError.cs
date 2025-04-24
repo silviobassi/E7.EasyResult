@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace ServicoProcessamento.Communication.E7.EasyResult.Errors;
+namespace E7.EasyResult.Errors;
 
 /// <summary>
 /// Represents an error that occurs when an object is not found.

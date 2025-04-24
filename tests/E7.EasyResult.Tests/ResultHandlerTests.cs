@@ -1,6 +1,5 @@
-﻿using E7.EasyResult.Tests.Responses;
-using ServicoProcessamento.Communication.E7.EasyResult;
-using ServicoProcessamento.Communication.E7.EasyResult.Errors;
+﻿using E7.EasyResult.Errors;
+using E7.EasyResult.Tests.Responses;
 using Shouldly;
 using static E7.EasyResult.Tests.Services.ResultSimulatorService;
 
