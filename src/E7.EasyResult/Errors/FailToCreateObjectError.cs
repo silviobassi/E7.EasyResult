@@ -29,5 +29,5 @@ internal class FailToCreateObjectError()
     /// <returns>
     /// A list containing a single message that describes the error.
     /// </returns>
-    public override List<string?> GetErrorsMessage() => [Message];
+    public override List<string> GetErrorsMessage() => [Message];
 }

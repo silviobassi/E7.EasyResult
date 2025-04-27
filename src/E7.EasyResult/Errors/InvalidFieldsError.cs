@@ -14,7 +14,7 @@ namespace E7.EasyResult.Errors;
 /// </remarks>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public sealed class InvalidFieldsError(List<string?> errorsMessages)
+public sealed class InvalidFieldsError(List<string> errorsMessages)
     : HttpError("Invalid fields.", HttpErrorType.ValidationRule, nameof(InvalidFieldsError))
 {
     /// <summary>
@@ -23,7 +23,7 @@ public sealed class InvalidFieldsError(List<string?> errorsMessages)
     /// <returns>
     /// A <see cref="List{T}"/> of strings containing the details of each validation failure.
     /// </returns>
-    public override List<string?> GetErrorsMessage() => errorsMessages;
+    public override List<string> GetErrorsMessage() => errorsMessages;
 
     /// <summary>
     /// Gets the HTTP status code that represents this validation error.

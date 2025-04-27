@@ -19,13 +19,13 @@
 /// <param name="errorCodeName">A symbolic, unique identifier for the error case, used for logging or API responses.</param>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public abstract class AppError(string? message, Enum appErrorType, string errorCodeName)
+public abstract class AppError(string message, Enum appErrorType, string errorCodeName)
 {
     /// <summary>
     /// Gets a descriptive message that explains the error in technical terms.
     /// Typically used for diagnostics, logs, or internal developer feedback.
     /// </summary>
-    protected string? Message { get; } = message;
+    protected string Message { get; } = message;
 
     /// <summary>
     /// Gets the classification of the error.
@@ -48,5 +48,5 @@ public abstract class AppError(string? message, Enum appErrorType, string errorC
     /// A list of strings representing user-friendly messages related to this error.
     /// These may include validation hints, access denial reasons, or instructions for resolution.
     /// </returns>
-    public abstract List<string?> GetErrorsMessage();
+    public abstract List<string> GetErrorsMessage();
 }

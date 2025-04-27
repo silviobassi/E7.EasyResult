@@ -34,15 +34,15 @@ public class Result
     {
         IsSuccess = isSuccess;
         IsFailure = !isSuccess;
-        Error = error;
+        if (error != null) Error = error;
     }
 
     /// <summary>
     /// Creates a <see cref="Result{TValue}"/> from a given value.
     /// If the value is null, returns a failure with a <see cref="FailToCreateObjectError"/>.
     /// </summary>
-    public static Result<TValue> Create<TValue>(TValue? value)
-        => value is not null ? Result<TValue>.Success(value) : Result<TValue>.Failure(new FailToCreateObjectError());
+    public static Result<TValue> Create<TValue>(TValue value)
+        => value is not null ? Result<TValue>.Success(value) : value;
 
     /// <summary>
     /// Asynchronously creates a <see cref="Result{T}"/> from a task result.
@@ -72,7 +72,7 @@ public class Result
     /// <summary>
     /// Checks whether the result's error matches a given error type.
     /// </summary>
-    public bool IsErrorType(Enum appErrorType) => Error?.AppErrorType.Equals(appErrorType) == true;
+    public bool IsErrorType(Enum appErrorType) => Error?.AppErrorType.Equals(appErrorType) ?? false;
 
     /// <summary>
     /// Returns a string describing the result's state.

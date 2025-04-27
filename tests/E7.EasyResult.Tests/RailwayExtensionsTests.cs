@@ -8,7 +8,7 @@ public class RailwayExtensionsTests
     private class DummyError()
         : AppError("Object not found.", HttpErrorType.NotFoundRule, nameof(DummyError))
     {
-        public override List<string?> GetErrorsMessage()
+        public override List<string> GetErrorsMessage()
         {
             return [Message];
         }

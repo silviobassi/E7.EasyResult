@@ -18,7 +18,7 @@ namespace E7.EasyResult.Errors;
 /// <param name="errorCodeName">A symbolic code name used to uniquely identify the specific error case.</param>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public abstract class HttpError(string? message, Enum appErrorType, string errorCodeName)
+public abstract class HttpError(string message, Enum appErrorType, string errorCodeName)
     : AppError(message, appErrorType, errorCodeName)
 {
     /// <summary>

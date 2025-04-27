@@ -21,7 +21,7 @@ public sealed class ElementNotFoundError()
     /// <returns>
     /// A list with a single entry: the detail message of the error.
     /// </returns>
-    public override List<string?> GetErrorsMessage() => [Message];
+    public override List<string> GetErrorsMessage() => [Message];
 
     /// <summary>
     /// Returns the HTTP status code that corresponds to this error type.
