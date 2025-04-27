@@ -116,7 +116,7 @@ public class Result<T> : Result
     /// <summary>
     /// Implicitly converts an error to a failed result.
     /// </summary>
-    public static implicit operator Result<T?>(AppError? error) => Failure(error!)!;
+    public static implicit operator Result<T>(AppError error) => Failure(error);
 
     /// <summary>
     /// Returns a string describing the result and its value or error.
