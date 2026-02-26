@@ -11,7 +11,7 @@ namespace E7.EasyResult.Errors;
 /// </remarks>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public sealed class ElementNotFoundError()
+public sealed record ElementNotFoundError()
     : HttpError("Object not found.", HttpErrorType.NotFoundRule, nameof(ElementNotFoundError))
 {
     /// <summary>

@@ -13,13 +13,13 @@ namespace E7.EasyResult.Errors;
 /// It enforces a contract for HTTP-aware error handling, separating it from domain-only errors
 /// that have no concern with HTTP transport semantics.
 /// </remarks>
-/// <param name="message">A human-readable message describing the error in detail.</param>
-/// <param name="appErrorType">The classification of the error using a strongly-typed enumeration.</param>
-/// <param name="errorCodeName">A symbolic code name used to uniquely identify the specific error case.</param>
+/// <param name="Message">A human-readable message describing the error in detail.</param>
+/// <param name="AppErrorType">The classification of the error using a strongly-typed enumeration.</param>
+/// <param name="ErrorCodeName">A symbolic code name used to uniquely identify the specific error case.</param>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public abstract class HttpError(string message, Enum appErrorType, string errorCodeName)
-    : AppError(message, appErrorType, errorCodeName)
+public abstract record HttpError(string Message, Enum AppErrorType, string ErrorCodeName)
+    : AppError(Message, AppErrorType, ErrorCodeName)
 {
     /// <summary>
     /// Gets the HTTP status code that corresponds to this error type.

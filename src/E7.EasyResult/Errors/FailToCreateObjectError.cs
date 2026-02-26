@@ -12,7 +12,7 @@ namespace E7.EasyResult.Errors;
 /// </remarks>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-internal class FailToCreateObjectError()
+internal record FailToCreateObjectError()
     : HttpError("Failed to create object.", HttpErrorType.FailToCreateObject, nameof(FailToCreateObjectError))
 {
     /// <summary>

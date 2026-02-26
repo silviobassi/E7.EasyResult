@@ -1,52 +1,34 @@
 ﻿namespace E7.EasyResult.Errors;
 
 /// <summary>
-/// Serves as the abstract base class for all structured application errors,
-/// offering a consistent model for categorizing, identifying, and communicating issues
-/// across different layers of an application (e.g., domain, application, infrastructure).
+/// Provides an abstract base for all structured application errors,
+/// ensuring a consistent model for categorizing, identifying, and communicating issues
+/// across various application layers (e.g., domain, application, infrastructure).
 /// </summary>
 /// <remarks>
-/// This class encapsulates the core metadata for an error, such as its type,
-/// identifier, and descriptive message. It is designed to be extended by more specific
-/// error types (e.g., domain errors, validation errors, infrastructure errors),
-/// promoting rich error semantics and centralized handling strategies.
+/// This record encapsulates essential error metadata: its type, a unique identifier,
+/// and a descriptive message. It is designed for extension by more specific error types
+/// (e.g., domain errors, validation errors, infrastructure errors), thereby promoting
+/// rich error semantics and facilitating centralized error handling strategies.
 ///
-/// The use of a generic <see cref="Enum"/> for the error type allows domain- or context-specific
-/// enumerations to be used for classification, enabling extensibility without sacrificing structure.
+/// The use of a generic <see cref="Enum"/> for the error type enables the integration
+/// of domain- or context-specific enumerations for classification, offering robust
+/// extensibility without compromising structural integrity.
 /// </remarks>
-/// <param name="message">A descriptive, developer-oriented message explaining the error context.</param>
-/// <param name="appErrorType">An enumeration value representing the error's classification.</param>
-/// <param name="errorCodeName">A symbolic, unique identifier for the error case, used for logging or API responses.</param>
+/// <param name="Message">A developer-oriented message detailing the error context, primarily for diagnostics, logging, or internal feedback.</param>
+/// <param name="AppErrorType">An enumeration value that classifies the error, such as <c>Validation</c>, <c>NotFound</c>, or <c>BusinessRuleViolation</c>.</param>
+/// <param name="ErrorCodeName">A symbolic and unique identifier for the specific error case, useful for logging, API responses, and system-wide referencing.</param>
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
-public abstract class AppError(string message, Enum appErrorType, string errorCodeName)
+public abstract record AppError(string Message, Enum AppErrorType, string ErrorCodeName)
 {
     /// <summary>
-    /// Gets a descriptive message that explains the error in technical terms.
-    /// Typically used for diagnostics, logs, or internal developer feedback.
-    /// </summary>
-    protected string Message { get; } = message;
-
-    /// <summary>
-    /// Gets the classification of the error.
-    /// This is typically an enumeration value that categorizes the error type
-    /// (e.g., Validation, NotFound, BusinessRuleViolation).
-    /// </summary>
-    public Enum AppErrorType { get; } = appErrorType;
-
-    /// <summary>
-    /// Gets the symbolic code name of the error, which can be used for identifying
-    /// and referencing specific error cases across systems and clients.
-    /// </summary>
-    public string ErrorCodeName { get; } = errorCodeName;
-
-    /// <summary>
-    /// Provides a list of user-facing messages that describe the error in a way suitable for UI display or API consumers.
-    /// Each message should convey actionable or descriptive information relevant to the context of the error.
+    /// Retrieves a list of user-facing messages that describe the error in a format suitable for UI display or external API consumers.
+    /// Each message aims to provide actionable or descriptive information relevant to the error's context.
     /// </summary>
     /// <returns>
-    /// A list of strings representing user-friendly messages related to this error.
-    /// These may include validation hints, access denial reasons, or instructions for resolution.
+    /// A <see cref="List{T}"/> of strings, each representing a user-friendly message related to this error.
+    /// Examples include validation hints, reasons for access denial, or instructions for resolution.
     /// </returns>
     public abstract List<string> GetErrorsMessage();
 }
