@@ -169,14 +169,14 @@ public class Result<T> : Result
     /// </summary>
     /// <param name="error">The error detailing the failure.</param>
     /// <returns>A failed <see cref="Result{T}"/>.</returns>
-    public new static Result<T> Failure(AppError error) => new(default!, false, error);
+    public static Result<T> Failure(AppError error) => new(default!, false, error);
 
     /// <summary>
     /// Creates a failed result populated entirely by a list of validation notifications.
     /// </summary>
     /// <param name="notifications">The list of validation notifications.</param>
     /// <returns>A failed <see cref="Result{T}"/>.</returns>
-    public new static Result<T> Failure(List<Notification> notifications) => new(default!, false, null, notifications);
+    public static Result<T> Failure(List<Notification> notifications) => new(default!, false, null, notifications);
 
     /// <summary>
     /// Creates a failed result containing both a primary application error and a list of detailed notifications.
