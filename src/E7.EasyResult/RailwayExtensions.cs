@@ -12,6 +12,11 @@ namespace E7.EasyResult;
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
 public static class RailwayExtensions
 {
+    /// <summary>
+    /// Extensions for <see cref="Result{TIn}"/> focusing on failure propagation and value validation.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the result value.</typeparam>
+    /// <param name="result">The result instance being extended.</param>
     extension<TIn>(Result<TIn> result)
     {
         /// <summary>
@@ -70,6 +75,11 @@ public static class RailwayExtensions
         return predicate(result.Result.Value) ? result.Result : Result<T>.Failure(error);
     }
 
+    /// <summary>
+    /// Extensions for <see cref="Result{T1}"/> focusing on combination and side-effects (Tap).
+    /// </summary>
+    /// <typeparam name="T1">The type of the result value.</typeparam>
+    /// <param name="result1">The result instance being extended.</param>
     extension<T1>(Result<T1> result1)
     {
         /// <summary>
@@ -132,6 +142,11 @@ public static class RailwayExtensions
         return result;
     }
 
+    /// <summary>
+    /// Extensions for <see cref="Result{TIn}"/> focusing on mapping and binding operations.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the result value.</typeparam>
+    /// <param name="result">The result instance being extended.</param>
     extension<TIn>(Result<TIn> result)
     {
         /// <summary>
@@ -188,6 +203,11 @@ public static class RailwayExtensions
         return result.Result.IsSuccess ? func(result.Result.Value) : Result<TOut>.Failure(result.Result.Error!);
     }
 
+    /// <summary>
+    /// Extensions for <see cref="Result{T}"/> focusing on failure manipulation and exception handling.
+    /// </summary>
+    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <param name="result">The result instance being extended.</param>
     extension<T>(Result<T> result)
     {
         /// <summary>
@@ -240,18 +260,40 @@ public static class RailwayExtensions
         => result.IsSuccess ? onSuccess() : onFailure(result.Error!);
 
     /// <summary>
-    /// Evaluates a generic result and invokes the corresponding function based on its success or failure state.
+    /// Extensions for <see cref="Result{T}"/> focusing on pattern matching and state evaluation.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
-    /// <typeparam name="TOut">The return type of the match functions.</typeparam>
-    /// <param name="result">The result to evaluate.</param>
-    /// <param name="onSuccess">The function to execute if the result is successful. Receives the result's value.</param>
-    /// <param name="onFailure">The function to execute if the result is a failure. Receives the original error.</param>
-    /// <returns>The value returned by the executed function.</returns>
-    public static TOut Match<T, TOut>(
-        this Result<T> result,
-        Func<T, TOut> onSuccess,
-        Func<AppError, TOut> onFailure
-    )
-        => result.IsSuccess ? onSuccess(result.Value) : onFailure(result.Error!);
+    /// <param name="result">The result instance being extended.</param>
+    extension<T>(Result<T> result)
+    {
+        /// <summary>
+        /// Evaluates a generic result and invokes the corresponding function based on its success or failure state, 
+        /// specifically designed for polymorphic scenarios where the success and failure branches return distinct types.
+        /// </summary>
+        /// <remarks>
+        /// This overload is particularly useful in modern routing paradigms like ASP.NET Core Minimal APIs. 
+        /// It allows the seamless return of different concrete types (e.g., an <c>IResult</c> on success and an <c>AppError</c> on failure) 
+        /// without requiring explicit casting to <c>object</c> by the consumer.
+        /// </remarks>
+        /// <param name="onSuccess">The function to execute if the result is successful. Receives the result's value and returns an <c>object</c>.</param>
+        /// <param name="onFailure">The function to execute if the result is a failure. Receives the original error and returns an <c>object</c>.</param>
+        /// <returns>A polymorphic <c>object</c> returned by the executed function.</returns>
+        public object Match(Func<T, object> onSuccess,
+            Func<AppError, object> onFailure)
+        {
+            return !result.IsSuccess ? onFailure(result.Error!) : onSuccess(result.Value);
+        }
+
+        /// <summary>
+        /// Evaluates a generic result and invokes the corresponding function based on its success or failure state.
+        /// </summary>
+        /// <typeparam name="TOut">The return type of the match functions.</typeparam>
+        /// <param name="onSuccess">The function to execute if the result is successful. Receives the result's value.</param>
+        /// <param name="onFailure">The function to execute if the result is a failure. Receives the original error.</param>
+        /// <returns>The value returned by the executed function.</returns>
+        public TOut Match<TOut>(Func<T, TOut> onSuccess,
+            Func<AppError, TOut> onFailure
+        )
+            => result.IsSuccess ? onSuccess(result.Value) : onFailure(result.Error!);
+    }
 }
