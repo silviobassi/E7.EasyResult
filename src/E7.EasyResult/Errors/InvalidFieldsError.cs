@@ -15,7 +15,7 @@ namespace E7.EasyResult.Errors;
 /// <author>Silvio Luiz Bassi</author>
 /// <company>Enfatiza7 Consultoria em Tecnologia LTDA</company>
 public sealed record InvalidFieldsError(List<string> ErrorsMessages)
-    : HttpError("Invalid fields.", HttpErrorType.ValidationRule, nameof(InvalidFieldsError))
+    : HttpError("Invalid fields.", HttpErrorType.Validation, nameof(InvalidFieldsError))
 {
     /// <summary>
     /// Returns the collection of specific validation error messages associated with this error.

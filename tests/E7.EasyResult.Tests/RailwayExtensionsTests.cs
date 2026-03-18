@@ -6,7 +6,7 @@ namespace E7.EasyResult.Tests;
 public sealed class RailwayExtensionsTests
 {
     // 1. Converted to a record, following AppError
-    private record DummyError() : AppError("Object not found.", HttpErrorType.NotFoundRule, nameof(DummyError))
+    private record DummyError() : AppError("Object not found.", HttpErrorType.NotFound, nameof(DummyError))
     {
         public override List<string> GetErrorsMessage() => [Message];
     }
