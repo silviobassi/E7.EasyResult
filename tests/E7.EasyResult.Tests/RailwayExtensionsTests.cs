@@ -213,6 +213,95 @@ public sealed class RailwayExtensionsTests
     }
 
     [Fact]
+    public async Task BindAsync_Should_Invoke_Async_Function_When_Result_Is_Success()
+    {
+        var result = Result<int>.Success(2);
+
+        var bound = await result.BindAsync(async x =>
+        {
+            await Task.Delay(1);
+            return Result<string>.Success($"Value: {x}");
+        });
+
+        bound.IsSuccess.ShouldBeTrue();
+        bound.Value.ShouldBe("Value: 2");
+    }
+
+    [Fact]
+    public async Task BindAsync_Should_Invoke_Sync_Function_When_Result_Is_Success()
+    {
+        var result = Result<int>.Success(2);
+
+        var bound = await result.BindAsync(x => Result<string>.Success($"Value: {x}"));
+
+        bound.IsSuccess.ShouldBeTrue();
+        bound.Value.ShouldBe("Value: 2");
+    }
+
+    [Fact]
+    public async Task BindAsync_Should_Not_Invoke_Function_And_Should_Propagate_Notifications_When_Result_Is_Failure()
+    {
+        var wasCalled = false;
+        var notification = new Notification("01", "Invalid value");
+        var result = Result<int>.Failure([notification]);
+
+        var bound = await result.BindAsync(x =>
+        {
+            wasCalled = true;
+            return Result<string>.Success($"Value: {x}");
+        });
+
+        wasCalled.ShouldBeFalse();
+        bound.IsFailure.ShouldBeTrue();
+        bound.Notifications.ShouldContain(notification);
+    }
+
+    [Fact]
+    public async Task BindAsync_Should_Invoke_Async_Function_When_Task_Result_Is_Success()
+    {
+        var resultTask = Task.FromResult(Result<int>.Success(2));
+
+        var bound = await resultTask.BindAsync(async x =>
+        {
+            await Task.Delay(1);
+            return Result<string>.Success($"Value: {x}");
+        });
+
+        bound.IsSuccess.ShouldBeTrue();
+        bound.Value.ShouldBe("Value: 2");
+    }
+
+    [Fact]
+    public async Task BindAsync_Should_Invoke_Sync_Function_When_Task_Result_Is_Success()
+    {
+        var resultTask = Task.FromResult(Result<int>.Success(2));
+
+        var bound = await resultTask.BindAsync(x => Result<string>.Success($"Value: {x}"));
+
+        bound.IsSuccess.ShouldBeTrue();
+        bound.Value.ShouldBe("Value: 2");
+    }
+
+    [Fact]
+    public async Task BindAsync_Should_Not_Invoke_Function_And_Should_Propagate_Notifications_When_Task_Result_Is_Failure()
+    {
+        var wasCalled = false;
+        var notification = new Notification("01", "Invalid value");
+        var resultTask = Task.FromResult(Result<int>.Failure([notification]));
+
+        var bound = await resultTask.BindAsync(async x =>
+        {
+            wasCalled = true;
+            await Task.Delay(1);
+            return Result<string>.Success($"Value: {x}");
+        });
+
+        wasCalled.ShouldBeFalse();
+        bound.IsFailure.ShouldBeTrue();
+        bound.Notifications.ShouldContain(notification);
+    }
+
+    [Fact]
     public async Task Tap_Async_With_Task_Function_Should_Invoke_When_Success()
     {
         var wasCalled = false;

@@ -187,6 +187,35 @@ public static class RailwayExtensions
         {
             return result.IsSuccess ? func(result.Value) : Result<TOut>.Failure(result.Error!);
         }
+
+        /// <summary>
+        /// Asynchronously chains another operation that returns a <see cref="Result{TOut}"/> if the current result is successful.
+        /// If the current result is a failure, its primary error and notifications are propagated without invoking the function.
+        /// </summary>
+        /// <typeparam name="TOut">The value type of the returned result.</typeparam>
+        /// <param name="func">The asynchronous function that returns the next <see cref="Result{TOut}"/> in the chain.</param>
+        /// <returns>A <see cref="Task"/> resolving to the chained operation result or the propagated failure.</returns>
+        public async Task<Result<TOut>> BindAsync<TOut>(Func<TIn, Task<Result<TOut>>> func)
+        {
+            return result.IsSuccess
+                ? await func(result.Value)
+                : Result<TOut>.Failure(result.Error!, result.Notifications.ToList());
+        }
+
+        /// <summary>
+        /// Asynchronously chains a synchronous operation that returns a <see cref="Result{TOut}"/> if the current result is successful.
+        /// If the current result is a failure, its primary error and notifications are propagated without invoking the function.
+        /// </summary>
+        /// <typeparam name="TOut">The value type of the returned result.</typeparam>
+        /// <param name="func">The synchronous function that returns the next <see cref="Result{TOut}"/> in the chain.</param>
+        /// <returns>A <see cref="Task"/> resolving to the chained operation result or the propagated failure.</returns>
+        public Task<Result<TOut>> BindAsync<TOut>(Func<TIn, Result<TOut>> func)
+        {
+            return Task.FromResult(
+                result.IsSuccess
+                    ? func(result.Value)
+                    : Result<TOut>.Failure(result.Error!, result.Notifications.ToList()));
+        }
     }
 
     /// <summary>
@@ -201,6 +230,46 @@ public static class RailwayExtensions
     public static Result<TOut> Bind<TIn, TOut>(this Task<Result<TIn>> result, Func<TIn, Result<TOut>> func)
     {
         return result.Result.IsSuccess ? func(result.Result.Value) : Result<TOut>.Failure(result.Result.Error!);
+    }
+
+    /// <summary>
+    /// Extensions for task-wrapped <see cref="Result{TIn}"/> values focusing on asynchronous binding operations.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the result value.</typeparam>
+    /// <param name="resultTask">The task-wrapped result instance being extended.</param>
+    extension<TIn>(Task<Result<TIn>> resultTask)
+    {
+        /// <summary>
+        /// Chains another asynchronous operation that returns a <see cref="Result{TOut}"/> after the task-wrapped result succeeds.
+        /// If the resolved result is a failure, its primary error and notifications are propagated without invoking the function.
+        /// </summary>
+        /// <typeparam name="TOut">The value type of the returned result.</typeparam>
+        /// <param name="func">The asynchronous function that returns the next <see cref="Result{TOut}"/> in the chain.</param>
+        /// <returns>A <see cref="Task"/> resolving to the chained operation result or the propagated failure.</returns>
+        public async Task<Result<TOut>> BindAsync<TOut>(Func<TIn, Task<Result<TOut>>> func)
+        {
+            var result = await resultTask;
+
+            return result.IsSuccess
+                ? await func(result.Value)
+                : Result<TOut>.Failure(result.Error!, result.Notifications.ToList());
+        }
+
+        /// <summary>
+        /// Chains a synchronous operation that returns a <see cref="Result{TOut}"/> after the task-wrapped result succeeds.
+        /// If the resolved result is a failure, its primary error and notifications are propagated without invoking the function.
+        /// </summary>
+        /// <typeparam name="TOut">The value type of the returned result.</typeparam>
+        /// <param name="func">The synchronous function that returns the next <see cref="Result{TOut}"/> in the chain.</param>
+        /// <returns>A <see cref="Task"/> resolving to the chained operation result or the propagated failure.</returns>
+        public async Task<Result<TOut>> BindAsync<TOut>(Func<TIn, Result<TOut>> func)
+        {
+            var result = await resultTask;
+
+            return result.IsSuccess
+                ? func(result.Value)
+                : Result<TOut>.Failure(result.Error!, result.Notifications.ToList());
+        }
     }
 
     /// <summary>
