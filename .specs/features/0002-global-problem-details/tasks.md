@@ -138,3 +138,13 @@ description: "Tarefas de implementação para tratamento global de Problem Detai
 2. Entregar US2 com consumidor de prova sem `switch` nos endpoints.
 3. Entregar US3 com migração documentada.
 4. Executar todos os gates de Polish.
+
+## Phase 7: Convergence
+
+- [X] T028 Adicionar ao adaptador e à prova um cenário de `AppError` comum que preserve mensagem, código e classificação na resposta Problem Details per FR-004 (partial)
+- [X] T029 Adicionar dois endpoints de prova que retornem a mesma falha e verificar equivalência de status, detalhes e notificações per US2/AC2 (missing)
+- [X] T030 Definir, documentar e testar a rejeição ou normalização previsível de status HTTP inválido ou inesperado per Edge Cases (partial)
+
+## Phase 8: Convergence
+
+- [X] T031 Atualizar o exemplo do handler global em `README.md` para serializar também código e classificação do erro per FR-004 e US3/AC1 (partial)

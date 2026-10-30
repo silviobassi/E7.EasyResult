@@ -32,9 +32,11 @@ sucesso não é executado para falhas.
    ```
 
 3. Execute um caso com `HttpError`, um `AppError` comum e uma falha somente com notificações.
-4. Confirme, respectivamente, o status do erro, `400`, e `400`, além de detalhes e notificações preservados.
+4. Confirme, respectivamente, o status do erro, `400`, e `400`, além de detalhes, classificação, código e notificações preservados.
 5. Compile também um consumidor usando `onFailure: error => HandleLegacyError(error)` para validar compatibilidade.
 6. Adicione outro `HttpError` sem modificar os endpoints e confirme que o status é aplicado pelo handler central.
+7. Confirme que dois endpoints com a mesma falha produzem respostas equivalentes e que um status HTTP inválido é
+   normalizado para `400`, sem resposta de sucesso.
 
 O consumidor de prova deste recurso pode ser executado diretamente da raiz:
 
@@ -42,8 +44,8 @@ O consumidor de prova deste recurso pode ser executado diretamente da raiz:
 dotnet run --project .specs/features/0002-global-problem-details/proof/Consumer/Consumer.csproj --configuration Release
 ```
 
-Uma execução sem saída e código `0` confirma os cenários de `404`, `400` com notificações e `409` para um
-`HttpError` adicionado sem alterar os endpoints.
+Uma execução sem saída e código `0` confirma os cenários de `404`, `400` com erro comum ou notificações, equivalência
+entre endpoints e `409` para um `HttpError` adicionado sem alterar os endpoints.
 
 ## Critérios de conclusão
 

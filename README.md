@@ -222,13 +222,19 @@ static IResult HandleFailure(Failure failure)
     var statusCode = error is HttpError httpError
         ? (int)httpError.GetHttpStatusCode()
         : StatusCodes.Status400BadRequest;
+    if (statusCode is < 400 or > 599)
+    {
+        statusCode = StatusCodes.Status400BadRequest;
+    }
 
     return Results.Problem(
         detail: error?.Message ?? "Validation failed.",
         statusCode: statusCode,
         extensions: new Dictionary<string, object?>
         {
-            ["notifications"] = failure.Notifications
+            ["notifications"] = failure.Notifications,
+            ["errorCode"] = error?.ErrorCodeName,
+            ["errorType"] = error?.AppErrorType.ToString()
         });
 }
 
@@ -365,10 +371,16 @@ static IResult HandleFailure(Failure failure)
         statusCode: statusCode,
         extensions: new Dictionary<string, object?>
         {
-            ["notifications"] = failure.Notifications
+            ["notifications"] = failure.Notifications,
+            ["errorCode"] = error?.ErrorCodeName,
+            ["errorType"] = error?.AppErrorType.ToString()
         });
 }
 ```
+
+The handler should normalize an invalid or unexpected HTTP status to `400 Bad Request`; it must never turn a failure
+into a successful response. It should also include the error code and classification when the response format supports
+those fields.
 
 Existing consumers can keep the legacy overload:
 

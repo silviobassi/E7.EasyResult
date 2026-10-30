@@ -28,6 +28,14 @@ public sealed class RailwayExtensionsTests
         public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.NotFound;
     }
 
+    private sealed record InvalidStatusHttpError()
+        : HttpError("Invalid status.", HttpErrorType.BadRequest, nameof(InvalidStatusHttpError))
+    {
+        public override List<string> GetErrorsMessage() => [Message];
+
+        public override HttpStatusCode GetHttpStatusCode() => (HttpStatusCode)200;
+    }
+
     [Fact]
     public void Ensure_Should_Return_Same_Result_When_Predicate_Is_True()
     {
@@ -276,6 +284,34 @@ public sealed class RailwayExtensionsTests
         response.StatusCode.ShouldBe(400);
         response.Detail.ShouldBe("Validation failed.");
         response.Notifications.ShouldBe([notification]);
+    }
+
+    [Fact]
+    public void ProblemDetails_Adapter_Should_Preserve_Common_Error_Metadata()
+    {
+        var error = new DummyError();
+        var result = Result<int>.Failure(error);
+
+        var response = result.Match(
+            _ => throw new InvalidOperationException(),
+            (Failure failure) => ResultSimulatorService.ToProblemDetails(failure));
+
+        response.StatusCode.ShouldBe(400);
+        response.Detail.ShouldBe(error.Message);
+        response.ErrorCode.ShouldBe(error.ErrorCodeName);
+        response.ErrorType.ShouldBe(error.AppErrorType.ToString());
+    }
+
+    [Fact]
+    public void ProblemDetails_Adapter_Should_Normalize_Invalid_Http_Status()
+    {
+        var result = Result<int>.Failure(new InvalidStatusHttpError());
+
+        var response = result.Match(
+            _ => throw new InvalidOperationException(),
+            (Failure failure) => ResultSimulatorService.ToProblemDetails(failure));
+
+        response.StatusCode.ShouldBe(400);
     }
 
     [Fact]

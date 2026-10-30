@@ -31,6 +31,10 @@ public static class ResultSimulatorService
         var statusCode = error is HttpError httpError
             ? (int)httpError.GetHttpStatusCode()
             : (int)HttpStatusCode.BadRequest;
+        if (statusCode is < 400 or > 599)
+        {
+            statusCode = (int)HttpStatusCode.BadRequest;
+        }
 
         return new ProblemDetailsResponse(
             statusCode,
