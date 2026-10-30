@@ -390,6 +390,27 @@ var message = result.Match(
     onFailure: (AppError? error) => error?.Message ?? "Validation failed.");
 ```
 
+When the caller intentionally wants to return the error object directly, the compact form is also valid:
+
+```csharp
+private static async Task<object> GetStateAsync(
+    Guid tenantId,
+    Guid threadId,
+    GetCurrentConversationStateHandler handler,
+    CancellationToken cancellationToken)
+{
+    var response = await handler.HandleAsync(
+        new GetCurrentConversationStateQuery(tenantId, threadId),
+        cancellationToken);
+
+    return response.Match(Results.Ok, error => error);
+}
+```
+
+Use this form when the surrounding layer owns the error representation or only needs the original `AppError`.
+It does not create an HTTP Problem Details response and does not expose the complete `Failure` notifications.
+For centralized HTTP error handling, use `onFailure: (Failure failure) => HandleFailure(failure)` instead.
+
 ---
 
 ## 🌐 Pre-Built Extensive Error Handling
