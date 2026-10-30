@@ -11,3 +11,11 @@ csharp_indent_block_contents = true
 csharp_indent_braces = false
 dotnet_sort_system_directives_first = true
 csharp_style_namespace_declarations = file_scoped:suggestion
+dotnet_style_prefer_collection_expression = true:suggestion
+
+# C# union-case patterns are valid at runtime but can be reported as unreachable by
+# analyzers that do not understand the union source type.
+dotnet_diagnostic.CS8519.severity = silent
+
+# Public generic APIs must document every type parameter.
+dotnet_diagnostic.CS1712.severity = warning

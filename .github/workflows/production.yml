@@ -25,7 +25,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            10.0.x
             11.0.100-rc.1.26425.128
 
       - name: Install dependencies
@@ -34,13 +33,16 @@ jobs:
       - name: Run Tests
         run: dotnet test --configuration Release
 
+      - name: Build Release
+        run: dotnet build E7.sln --configuration Release --no-restore
+
       - name: Github Tag Bump
         id: tab_bump
         uses: anothrNick/github-tag-action@1.71.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: patch
+          DEFAULT_BUMP: major
 
       - name: Copy LICENSE
         run: cp LICENSE src/E7.EasyResult/

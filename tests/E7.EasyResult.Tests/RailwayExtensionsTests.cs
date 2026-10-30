@@ -5,6 +5,13 @@ namespace E7.EasyResult.Tests;
 
 public sealed class RailwayExtensionsTests
 {
+    private static T ValueOf<T>(Result<T> result) =>
+        result switch
+        {
+            Success<T> success => success.Value,
+            _ => throw new InvalidOperationException()
+        };
+
     // 1. Converted to a record, following AppError
     private record DummyError() : AppError("Object not found.", HttpErrorType.NotFound, nameof(DummyError))
     {
@@ -18,7 +25,7 @@ public sealed class RailwayExtensionsTests
         var ensured = result.Ensure(x => x > 5, new DummyError());
 
         ensured.IsSuccess.ShouldBeTrue();
-        ensured.Value.ShouldBe(10);
+        ValueOf(ensured).ShouldBe(10);
     }
 
     [Fact]
@@ -46,15 +53,15 @@ public sealed class RailwayExtensionsTests
     }
 
     [Fact]
-    public void Ensure_Async_Should_Return_Same_Result_When_Predicate_Is_True()
+    public async Task Ensure_Async_Should_Return_Same_Result_When_Predicate_Is_True()
     {
         var resultTask = Task.FromResult(Result<string>.Success("ok"));
 
         // Removed 'await', as Ensure here resolves the task and returns the Result directly
-        var ensured = resultTask.Ensure(x => x == "ok", new DummyError());
+        var ensured = await resultTask.Ensure(x => x == "ok", new DummyError());
 
         ensured.IsSuccess.ShouldBeTrue();
-        ensured.Value.ShouldBe("ok");
+        ValueOf(ensured).ShouldBe("ok");
     }
 
     [Fact]
@@ -66,7 +73,7 @@ public sealed class RailwayExtensionsTests
         var combined = r1.Combine(r2);
 
         combined.IsSuccess.ShouldBeTrue();
-        combined.Value.ShouldBe((1, "two"));
+        ValueOf(combined).ShouldBe((1, "two"));
     }
 
     [Fact]
@@ -120,7 +127,7 @@ public sealed class RailwayExtensionsTests
         var mapped = result.Map(x => x * 10);
 
         mapped.IsSuccess.ShouldBeTrue();
-        mapped.Value.ShouldBe(20);
+        ValueOf(mapped).ShouldBe(20);
     }
 
     // NEW TEST: Ensure that Map does not lose notifications along the way
@@ -168,7 +175,7 @@ public sealed class RailwayExtensionsTests
         // We return 'err' (which is inferred as AppError)
         var value = result.Match(
             x => $"Success: {x}",
-            err => $"Fail: {err.GetErrorsMessage().FirstOrDefault()}");
+            err => $"Fail: {err?.GetErrorsMessage().FirstOrDefault() ?? "No error"}");
 
         value.ShouldBe("Success: 42");
     }
@@ -182,31 +189,43 @@ public sealed class RailwayExtensionsTests
         // We return 'err' (which is inferred as AppError)
         var value = result.Match(
             x => $"Success: {x}",
-            err => $"Fail: {err.GetErrorsMessage().FirstOrDefault()}");
+            err => $"Fail: {err?.GetErrorsMessage().FirstOrDefault() ?? "No error"}");
 
         value.ShouldBe("Fail: Object not found.");
     }
 
     [Fact]
-    public void Bind_Async_Should_Invoke_Function_When_Success()
+    public void Match_Should_Pass_Null_Error_For_Notification_Only_Failure()
+    {
+        var result = Result<int>.Failure([new Notification("field", "Invalid")]);
+
+        var value = result.Match(
+            _ => "success",
+            error => error is null ? "notifications" : "error");
+
+        value.ShouldBe("notifications");
+    }
+
+    [Fact]
+    public async Task Bind_Async_Should_Invoke_Function_When_Success()
     {
         var resultTask = Task.FromResult(Result<int>.Success(2));
 
         // No await, as the Bind method returns a synchronous Result
-        var bound = resultTask.Bind(x => Result<string>.Success($"Value: {x}"));
+        var bound = await resultTask.Bind(x => Result<string>.Success($"Value: {x}"));
 
         bound.IsSuccess.ShouldBeTrue();
-        bound.Value.ShouldBe("Value: 2");
+        ValueOf(bound).ShouldBe("Value: 2");
     }
 
     [Fact]
-    public void Bind_Async_Should_Not_Invoke_Function_When_Failure()
+    public async Task Bind_Async_Should_Not_Invoke_Function_When_Failure()
     {
         var error = new DummyError();
         var resultTask = Task.FromResult(Result<int>.Failure(error));
 
         // No await here either
-        var bound = resultTask.Bind(x => Result<string>.Success($"Value: {x}"));
+        var bound = await resultTask.Bind(x => Result<string>.Success($"Value: {x}"));
 
         bound.IsFailure.ShouldBeTrue();
         bound.Error.ShouldBe(error);
@@ -224,7 +243,7 @@ public sealed class RailwayExtensionsTests
         });
 
         bound.IsSuccess.ShouldBeTrue();
-        bound.Value.ShouldBe("Value: 2");
+        ValueOf(bound).ShouldBe("Value: 2");
     }
 
     [Fact]
@@ -235,7 +254,7 @@ public sealed class RailwayExtensionsTests
         var bound = await result.BindAsync(x => Result<string>.Success($"Value: {x}"));
 
         bound.IsSuccess.ShouldBeTrue();
-        bound.Value.ShouldBe("Value: 2");
+        ValueOf(bound).ShouldBe("Value: 2");
     }
 
     [Fact]
@@ -268,7 +287,7 @@ public sealed class RailwayExtensionsTests
         });
 
         bound.IsSuccess.ShouldBeTrue();
-        bound.Value.ShouldBe("Value: 2");
+        ValueOf(bound).ShouldBe("Value: 2");
     }
 
     [Fact]
@@ -279,7 +298,7 @@ public sealed class RailwayExtensionsTests
         var bound = await resultTask.BindAsync(x => Result<string>.Success($"Value: {x}"));
 
         bound.IsSuccess.ShouldBeTrue();
-        bound.Value.ShouldBe("Value: 2");
+        ValueOf(bound).ShouldBe("Value: 2");
     }
 
     [Fact]
@@ -345,7 +364,7 @@ public sealed class RailwayExtensionsTests
         });
 
         mapped.IsSuccess.ShouldBeTrue();
-        mapped.Value.ShouldBe(30);
+        ValueOf(mapped).ShouldBe(30);
     }
 
     [Fact]

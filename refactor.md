@@ -2,7 +2,9 @@
 
 **Contexto:** Este projeto é um pacote NuGet que implementa o `Result Pattern`. No entanto, com as `Union Types`
 introduzidas no C# 15 e .NET 11, podemos refatorar o projeto para aproveitar essas novas funcionalidades,
-tornando o código mais conciso e expressivo.
+tornando o código mais conciso e expressivo. Assim
+visite https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/union e links referentes a
+microsoft dotnet 11 para entender melhor o que são `Union Types` e como eles podem ser aplicados no projeto.
 
 ## Legado Atual
 

@@ -96,23 +96,70 @@ public sealed record BusinessRuleError(string Message)
 return Result<Process>.Failure(new BusinessRuleError("The contract is inactive."));
 ```
 
-### 3. Implicit Return (Automatic Conversions)
+### 3. Native Union Cases (C# 15 / .NET 11)
 
-**Objective:** Make the code even cleaner by allowing either the concrete return type or the error itself to be directly converted into a `Result<T>` without instantiating the `Result` class explicitly.
+`Result` and `Result<T>` are native C# unions. The cases are `Success`, `Success<T>`, and
+`Failure`; use pattern matching to inspect a result and factories to construct one.
 
 ```csharp
 public static Result<ObjectResponse> GetResult(bool isSuccess)
 {
     if (isSuccess) 
     {
-        // Implicitly converts the instance (ObjectResponse) to Result<ObjectResponse>.Success(...)
-        return new ObjectResponse("32kj42t492gfk59df0fd8f", "123456");
+        return Result<ObjectResponse>.Success(
+            new ObjectResponse("32kj42t492gfk59df0fd8f", "123456"));
     }
     
-    // Implicitly converts the error (AppError) to Result<ObjectResponse>.Failure(...)
-    return new ElementNotFoundError(); // Or any custom NotFoundError
+    return Result<ObjectResponse>.Failure(new ElementNotFoundError());
 }
 ```
+
+Inspect cases explicitly:
+
+```csharp
+return result switch
+{
+    Success<ObjectResponse> success => Results.Ok(success.Value),
+    Failure failure => Results.BadRequest(failure.Error),
+    _ => throw new InvalidOperationException("Uninitialized result.")
+};
+```
+
+This is a breaking API migration from the former class hierarchy. Replace implicit
+returns with `Result<T>.Success(...)` or `Result<T>.Failure(...)`, replace `.Value`
+with `Success<T>.Value` after pattern matching, and use `await` for asynchronous
+railway operations. Native unions require .NET 11 and C# 15.
+
+#### Public scenario matrix
+
+| Family | Reproducible example |
+|---|---|
+| Creation and inspection | `Result<T>.Success`, `Result<T>.Failure`, `switch` on `Success<T>`/`Failure` |
+| Custom and HTTP errors | `BusinessRuleError`, `HttpError`, `Match` |
+| Notifications | `Result.Failure(notifications)` and `Result.Failure(error, notifications)` |
+| Transformation | `Map` synchronous and asynchronous |
+| Composition | `Bind` and `BindAsync` |
+| Validation | `Ensure` with an error or notification |
+| Combination | `Combine` returning `(T1, T2)` |
+| Side effects | `Tap` synchronous and asynchronous |
+| Failure transformation | `MapFailure` preserving notifications |
+| Exception boundary | `TryCatch` |
+| Case selection | `Match` and union pattern matching |
+| Async operations | `await`, pending tasks, and `ConfigureAwait(false)` in library operations |
+| Migration | Before/after rules below and the explicit factory examples above |
+
+All public families are described in this README; the executable consumer under
+`.specs/features/0001-union-result/proof/` covers creation, inspection, failure
+propagation, notifications, custom errors, pattern matching, mapping and pending
+asynchronous work.
+
+#### Repository architecture
+
+- `src/E7.EasyResult/` contains the public result unions and railway extensions.
+- `src/E7.EasyResult/Errors/` contains the extensible `AppError`/`HttpError` hierarchy and built-in errors.
+- `tests/E7.EasyResult.Tests/` contains xUnit/Shouldly behavior tests for the public contract.
+- `.specs/features/0001-union-result/proof/` contains the executable cross-assembly consumer proof.
+- `.github/workflows/production.yml` restores, tests, builds, tags, packages, and publishes the NuGet artifact.
 
 ### 4. Working with Accumulated Notifications (Notification Pattern)
 
@@ -158,7 +205,11 @@ public async Task<IResult> CreateOrderAsync(CreateOrderRequest request)
         .BindAsync(command => ValidateCustomerAsync(command))
         .BindAsync(command => ReserveInventoryAsync(command))
         .BindAsync(reservation => CreateOrderFromReservation(reservation))
-        .Tap(order => _logger.LogInformation("Order {OrderId} created.", order.Id));
+        .Tap(order =>
+        {
+            _logger.LogInformation("Order {OrderId} created.", order.Id);
+            return Task.CompletedTask;
+        });
 
     return result.Match(
         onSuccess: order => Results.Created($"/orders/{order.Id}", order),
@@ -167,15 +218,15 @@ public async Task<IResult> CreateOrderAsync(CreateOrderRequest request)
             HttpError httpError => Results.Problem(
                 detail: httpError.Message,
                 statusCode: (int)httpError.GetHttpStatusCode()),
-            _ => Results.BadRequest(error.GetErrorsMessage())
+            _ => Results.BadRequest(error?.GetErrorsMessage() ?? ["Validation failed."])
         });
 }
 
 private async Task<Result<CreateOrderCommand>> ValidateCustomerAsync(CreateOrderCommand command)
 {
     return await _customers.ExistsAsync(command.CustomerId)
-        ? command
-        : new ElementNotFoundError("Customer not found.");
+        ? Result<CreateOrderCommand>.Success(command)
+        : Result<CreateOrderCommand>.Failure(new ElementNotFoundError());
 }
 
 private async Task<Result<InventoryReservation>> ReserveInventoryAsync(CreateOrderCommand command)
@@ -183,7 +234,7 @@ private async Task<Result<InventoryReservation>> ReserveInventoryAsync(CreateOrd
     var reservation = await _inventory.TryReserveAsync(command.Items);
 
     return reservation is not null
-        ? reservation
+        ? Result<InventoryReservation>.Success(reservation)
         : Result<InventoryReservation>.Failure(
             new InvalidFieldsError(["One or more items are unavailable."]));
 }
