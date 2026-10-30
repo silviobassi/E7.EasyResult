@@ -1,0 +1,35 @@
+version: "3.0"
+harness:
+  name: enfatiza7-software-engineering-harness
+  mode: agent_interpreted
+  objective: Apply the smallest relevant engineering workflow using project evidence.
+  entrypoint: AGENTS.md
+  project_profile: .harness/project-profile.md
+  references:
+    quality_gates: .harness/quality-gates.yaml
+    architecture_tests: .harness/architecture-tests.yaml
+    skills: .harness/skills.yaml
+    confidence_evaluation: .harness/confidence-evaluation.yaml
+  principles:
+    - relevant_context_only
+    - current_requirement_before_speculative_design
+    - project_conventions_before_harness_defaults
+    - deterministic_evidence_before_semantic_judgment
+    - existing_tools_before_new_tools
+    - no_duplicate_validation
+  workflow:
+    - understand_scope_and_acceptance
+    - inspect_relevant_project_context_and_skills
+    - consult_specialist_for_concrete_question_only_when_needed
+    - implement_if_requested
+    - run_applicable_project_checks
+    - request_independent_review_when_material_impact_or_uncertainty_warrants_it
+    - address_concrete_findings_and_repeat_affected_checks
+    - report_results_and_remaining_limits
+  decision_support:
+    - Optional installed tools may advise on bounded semantic routing decisions only when explicitly invoked.
+    - Decision support cannot waive required project gates or required escalation.
+  escalation:
+    - Ask for a project decision when a new bounded context lacks an architectural owner or boundary.
+    - Clarify a material requirement ambiguity, unknown root cause, security design issue, or material domain or architecture redesign before dependent work.
+    - Stop when acceptance criteria are met or a blocker is reported; do not impose a fixed retry count or require a specialist agent.

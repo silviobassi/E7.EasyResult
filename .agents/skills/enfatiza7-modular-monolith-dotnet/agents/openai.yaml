@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enfatiza7 Modular Monolith .NET"
+  short_description: "Modular monolith boundary and composition rules"
+  default_prompt: "Use $enfatiza7-modular-monolith-dotnet to design .NET module boundaries and composition root integrations."

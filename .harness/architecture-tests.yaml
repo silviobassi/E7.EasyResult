@@ -1,0 +1,14 @@
+version: "2.0"
+architecture_tests:
+  run_existing_when: The changed boundary could violate an explicit rule protected by the test.
+  propose_new_only_when:
+    - The project states an explicit architectural rule.
+    - The violation can be detected deterministically and would have meaningful cost.
+    - Existing tools or tests do not already cover it.
+    - The test's maintenance cost is justified by the current risk.
+  reject_when:
+    - The rule is a style preference or speculative future requirement.
+    - A simpler existing check covers the same violation.
+    - The test would couple unrelated modules or prohibit a valid architecture style.
+  examples_to_consider: [dependency_direction, module_boundaries, domain_infrastructure_separation, dependency_cycles]
+  blocking: Only when the applicable project gate is declared required.

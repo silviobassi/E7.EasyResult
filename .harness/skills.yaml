@@ -1,0 +1,23 @@
+version: "3.0"
+skills:
+  location: .agents/skills
+  selection: Load only skills relevant to the task and the project's declared stack and architecture.
+  project_specific_rules: Project instructions and declared architecture take precedence over skill defaults.
+  available:
+    general: [enfatiza7-software-craftsmanship, enfatiza7-tdd-guidelines, enfatiza7-security-engineering, enfatiza7-harness-setup]
+    backend: [enfatiza7-project-rules-dotnet, enfatiza7-modular-monolith-dotnet, enfatiza7-backend-architecture-dotnet]
+    frontend: []
+    optional: []
+  installed:
+    backend: dotnet
+    frontend: none
+  supported:
+    backend: [java, dotnet]
+    frontend: [blazor, react, nextjs, angular]
+    optional: [enfatiza7-model-advice]
+  conditions:
+    enfatiza7-harness-setup: Use at project setup or meaningful tooling refresh, not each task.
+    enfatiza7-model-advice: Use only with valid optional local advice configuration; off suppresses extension advice and consultations. Model selection stays manual.
+    enfatiza7-tdd-guidelines: Use only when TDD is chosen.
+    enfatiza7-security-engineering: Use when the change has a relevant software security risk; do not require it for unrelated work.
+    architecture_skills: Use only for the matching technology and declared architecture.

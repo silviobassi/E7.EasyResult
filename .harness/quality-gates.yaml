@@ -1,0 +1,19 @@
+version: "3.0"
+quality_gates:
+  states: [passed, failed, not_applicable, unavailable]
+  authority: Project tool output is evidence; semantic review cannot override a failed check.
+  selection:
+    - Choose relevant verification during requirements/spec analysis; use .harness/verification-plan.md when helpful.
+    - Use finite commands and project-derived cost/timeout limits; inspect lifecycle coverage to avoid duplicate checks.
+    - Run the smallest check relevant to affected behavior and boundaries.
+    - Honor additional required gates declared by the project.
+    - Use existing analyzers and project-configured thresholds; do not duplicate their metrics.
+  cases:
+    documentation_only: Run relevant documentation checks; code build and behavior tests are not applicable unless the project requires them.
+    local_code: Run focused tests during implementation and one project build at the end of the complete scope when a build exists.
+    cross_boundary: Widen relevant tests and checks for shared code, shared databases, shared configuration, or module boundaries.
+    architecture_rule: Run an existing architecture test when the change could violate its protected rule.
+  completion:
+    - A required gate that failed or is unavailable blocks completion.
+    - Report not-applicable and unavailable states explicitly with reasons.
+    - After a fix, repeat only checks that the fix may affect; repeat the final build if fixing its failure.

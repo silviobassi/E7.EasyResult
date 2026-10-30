@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enfatiza7 Software Craftsmanship"
+  short_description: "Pragmatic production-code guidance"
+  default_prompt: "Use $enfatiza7-software-craftsmanship to improve this code for production quality."

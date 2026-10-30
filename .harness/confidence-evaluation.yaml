@@ -1,0 +1,9 @@
+version: "2.0"
+confidence_evaluation:
+  enabled: false
+  activation: Only when the user explicitly chooses a confidence assessment for a semantic decision.
+  role: Advisory explanation of evidence, uncertainty, and assumptions; not a numeric gate.
+  rules:
+    - Do not assign uncalibrated numeric thresholds.
+    - Do not replace deterministic check results.
+    - Do not block ordinary task completion when this assessment is not requested.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enfatiza7 TDD Guidelines"
+  short_description: "Red-Green-Refactor TDD guidance"
+  default_prompt: "Use $enfatiza7-tdd-guidelines when TDD is chosen for this change."

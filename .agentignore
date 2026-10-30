@@ -1,0 +1,60 @@
+# Metadados de controle de versão e arquivos de IDE.
+.git/
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Saídas geradas pelo .NET, testes e empacotamento.
+**/bin/
+**/obj/
+**/TestResults/
+**/coverage/
+**/coverage.*
+**/*.trx
+**/*.coverage
+**/*.coveragexml
+packages/
+artifacts/
+*.nupkg
+*.snupkg
+
+# Logs, arquivos temporários e cópias locais.
+**/*.log
+**/*.tmp
+**/*.bak
+**/*.swp
+**/.DS_Store
+**/Thumbs.db
+
+# Credenciais e configurações locais potencialmente sensíveis.
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+**/*.pem
+**/*.key
+**/*.pfx
+**/*.p12
+**/secrets.json
+
+# ENFATIZA7 AGENTIGNORE START
+# Advisory only: skip generated and local files in routine searches.
+.git/
+.idea/
+.vscode/
+__pycache__/
+.pytest_cache/
+node_modules/
+bin/
+obj/
+target/
+build/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+# Keep AGENTS.md, .harness/, .agents/skills/, and .specs/ visible.
+# ENFATIZA7 AGENTIGNORE END

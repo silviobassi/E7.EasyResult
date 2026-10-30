@@ -195,3 +195,22 @@ FakesAssemblies/
 coverage.opencover.xml
 
 .idea
+
+# ENFATIZA7 GITIGNORE START
+.idea/
+.vscode/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+node_modules/
+bin/
+obj/
+target/
+build/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+# Track AGENTS.md, .harness/, .agents/skills/, and .specs/.
+# ENFATIZA7 GITIGNORE END

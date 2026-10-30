@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enfatiza7 .NET Backend Architecture"
+  short_description: "Choose pragmatic .NET backend patterns"
+  default_prompt: "Use $enfatiza7-backend-architecture-dotnet vertical-slice to structure this Enfatiza7 module."
