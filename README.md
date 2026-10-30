@@ -213,12 +213,22 @@ public async Task<IResult> CreateOrderAsync(CreateOrderRequest request)
 
     return result.Match(
         onSuccess: order => Results.Created($"/orders/{order.Id}", order),
-        onFailure: error => error switch
+        onFailure: (Failure failure) => HandleFailure(failure));
+}
+
+static IResult HandleFailure(Failure failure)
+{
+    var error = failure.Error;
+    var statusCode = error is HttpError httpError
+        ? (int)httpError.GetHttpStatusCode()
+        : StatusCodes.Status400BadRequest;
+
+    return Results.Problem(
+        detail: error?.Message ?? "Validation failed.",
+        statusCode: statusCode,
+        extensions: new Dictionary<string, object?>
         {
-            HttpError httpError => Results.Problem(
-                detail: httpError.Message,
-                statusCode: (int)httpError.GetHttpStatusCode()),
-            _ => Results.BadRequest(error?.GetErrorsMessage() ?? ["Validation failed."])
+            ["notifications"] = failure.Notifications
         });
 }
 
@@ -326,7 +336,9 @@ Result<User> validation = ValidateSession()
 
 ### `Match`
 
-**Objective:** Unpack and recover final values or interact with perimeter framework layers (API Controllers / Minimal APIs). It forces a rigid evaluation resolution, executing either a branch resolving (Success) or handling a failure route (Failure) guaranteeing a thoroughly cohesive translation to end clients.
+**Objective:** Unpack and recover final values or delegate the complete `Failure` case to a boundary adapter. The
+`Failure` overload exposes both the primary error and notifications; the legacy `AppError?` overload remains available
+for gradual migration.
 
 ```csharp
 public IResult FetchWithMatch(int id)
@@ -334,12 +346,36 @@ public IResult FetchWithMatch(int id)
     return SearchUser(id)
         .Match(
             onSuccess: user => Results.Ok(user),
-            onFailure: error => error switch
-            {
-                HttpError httpErr => Results.Problem(statusCode: (int)httpErr.GetHttpStatusCode(), detail: httpErr.Message),
-                _ => Results.BadRequest(error.Message)
-            });
+            onFailure: (Failure failure) => HandleFailure(failure));
 }
+```
+
+Use the complete failure overload for centralized HTTP handling:
+
+```csharp
+static IResult HandleFailure(Failure failure)
+{
+    var error = failure.Error;
+    var statusCode = error is HttpError httpError
+        ? (int)httpError.GetHttpStatusCode()
+        : StatusCodes.Status400BadRequest;
+
+    return Results.Problem(
+        detail: error?.Message ?? "Validation failed.",
+        statusCode: statusCode,
+        extensions: new Dictionary<string, object?>
+        {
+            ["notifications"] = failure.Notifications
+        });
+}
+```
+
+Existing consumers can keep the legacy overload:
+
+```csharp
+var message = result.Match(
+    onSuccess: value => value.ToString(),
+    onFailure: (AppError? error) => error?.Message ?? "Validation failed.");
 ```
 
 ---

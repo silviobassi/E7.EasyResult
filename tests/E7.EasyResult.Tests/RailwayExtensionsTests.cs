@@ -1,5 +1,7 @@
 ﻿using E7.EasyResult.Errors;
+using E7.EasyResult.Tests.Services;
 using Shouldly;
+using System.Net;
 
 namespace E7.EasyResult.Tests;
 
@@ -16,6 +18,14 @@ public sealed class RailwayExtensionsTests
     private record DummyError() : AppError("Object not found.", HttpErrorType.NotFound, nameof(DummyError))
     {
         public override List<string> GetErrorsMessage() => [Message];
+    }
+
+    private sealed record DummyHttpError()
+        : HttpError("Object not found.", HttpErrorType.NotFound, nameof(DummyHttpError))
+    {
+        public override List<string> GetErrorsMessage() => [Message];
+
+        public override HttpStatusCode GetHttpStatusCode() => HttpStatusCode.NotFound;
     }
 
     [Fact]
@@ -79,7 +89,7 @@ public sealed class RailwayExtensionsTests
     [Fact]
     public void Combine_Should_Return_First_Error_When_First_Is_Failure()
     {
-        var error = new DummyError();
+        var error = new DummyHttpError();
         var r1 = Result<int>.Failure(error);
         var r2 = Result<string>.Success("ok");
 
@@ -201,9 +211,71 @@ public sealed class RailwayExtensionsTests
 
         var value = result.Match(
             _ => "success",
-            error => error is null ? "notifications" : "error");
+            (Failure failure) => failure.Error is null ? "notifications" : "error");
 
         value.ShouldBe("notifications");
+    }
+
+    [Fact]
+    public void Match_Should_Pass_Complete_Failure_To_New_Overload()
+    {
+        var error = new DummyError();
+        var notification = new Notification("field", "Invalid");
+        var result = Result<int>.Failure(error, [notification]);
+
+        var failure = result.Match(
+            _ => (Failure?)null,
+            (Failure value) => value);
+
+        failure.ShouldNotBeNull();
+        failure!.Error.ShouldBe(error);
+        failure.Notifications.ShouldContain(notification);
+    }
+
+    [Fact]
+    public void Match_Should_Preserve_Legacy_AppError_Overload()
+    {
+        var error = new DummyError();
+        var result = Result<int>.Failure(error);
+
+        var message = result.Match(
+            _ => "success",
+            (AppError? value) => value?.Message ?? "missing");
+
+        message.ShouldBe(error.Message);
+    }
+
+    [Fact]
+    public void ProblemDetails_Adapter_Should_Preserve_Http_Error_Metadata_And_Notifications()
+    {
+        var error = new DummyHttpError();
+        var notification = new Notification("field", "Invalid");
+        var result = Result<int>.Failure(error, [notification]);
+
+        var response = result.Match(
+            _ => throw new InvalidOperationException(),
+            (Failure failure) => ResultSimulatorService.ToProblemDetails(failure));
+
+        response.StatusCode.ShouldBe(404);
+        response.Detail.ShouldBe(error.Message);
+        response.ErrorCode.ShouldBe(error.ErrorCodeName);
+        response.ErrorType.ShouldBe(error.AppErrorType.ToString());
+        response.Notifications.ShouldBe([notification]);
+    }
+
+    [Fact]
+    public void ProblemDetails_Adapter_Should_Use_BadRequest_For_Notification_Only_Failure()
+    {
+        var notification = new Notification("field", "Invalid");
+        var result = Result<int>.Failure([notification]);
+
+        var response = result.Match(
+            _ => throw new InvalidOperationException(),
+            (Failure failure) => ResultSimulatorService.ToProblemDetails(failure));
+
+        response.StatusCode.ShouldBe(400);
+        response.Detail.ShouldBe("Validation failed.");
+        response.Notifications.ShouldBe([notification]);
     }
 
     [Fact]

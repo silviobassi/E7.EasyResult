@@ -12,7 +12,7 @@ public sealed class ResultTests
 
         result.ShouldBeOfType<Result<string>>();
         result.IsSuccess.ShouldBeTrue();
-        result.Match(value => value, _ => string.Empty).ShouldBe("value");
+        result.Match(value => value, (AppError? _) => string.Empty).ShouldBe("value");
     }
 
     [Fact]

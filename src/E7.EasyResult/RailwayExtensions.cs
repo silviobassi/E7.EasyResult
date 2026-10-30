@@ -310,4 +310,29 @@ public static class RailwayExtensions
             Failure failure => onFailure(failure.Error),
             _ => throw Result.InvalidState()
         };
+
+    /// <summary>
+    /// Evaluates a generic result and passes the complete failure case, including notifications,
+    /// to the failure callback.
+    /// </summary>
+    /// <typeparam name="T">The type of the successful value.</typeparam>
+    /// <typeparam name="TOut">The return type of the match functions.</typeparam>
+    /// <param name="result">The result to inspect.</param>
+    /// <param name="onSuccess">The callback for success.</param>
+    /// <param name="onFailure">The callback for failure, including its error and notifications.</param>
+    /// <returns>The value returned by the executed function.</returns>
+    /// <remarks>
+    /// Use an explicit <see cref="Failure"/> parameter when both failure callback overloads
+    /// could otherwise be inferred from an untyped lambda.
+    /// </remarks>
+    public static TOut Match<T, TOut>(
+        this Result<T> result,
+        Func<T, TOut> onSuccess,
+        Func<Failure, TOut> onFailure) =>
+        result switch
+        {
+            Success<T> success => onSuccess(success.Value),
+            Failure failure => onFailure(failure),
+            _ => throw Result.InvalidState()
+        };
 }
